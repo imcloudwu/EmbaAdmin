@@ -59,18 +59,35 @@ extension String {
         return self.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
     }
     
-    func PadLeft(leng:Int,str:String) -> String{
+//    func PadLeft(leng:Int,str:String) -> String{
+//        
+//        if (self as NSString).length < leng {
+//            var l = leng - (self as NSString).length
+//            
+//            var s = ""
+//            
+//            for i in 0...l{
+//                s += str
+//            }
+//            
+//            return s + self
+//        }
+//        
+//        return self
+//    }
+    
+    func PadRight(leng:Int,str:String) -> String{
         
         if (self as NSString).length < leng {
             var l = leng - (self as NSString).length
             
             var s = ""
             
-            for i in 0...l{
+            for i in 1...l{
                 s += str
             }
             
-            return s + self
+            return self + s
         }
         
         return self

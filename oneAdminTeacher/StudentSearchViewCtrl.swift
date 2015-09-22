@@ -27,8 +27,7 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         
         self.navigationItem.title = "學生查詢"
         
-        let sideMenuBtn = UIBarButtonItem(image: UIImage(named: "Menu-24.png"), style: UIBarButtonItemStyle.Plain, target: self, action: "ToggleSideMenu")
-        self.navigationItem.leftBarButtonItem = sideMenuBtn
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Menu-24.png"), style: UIBarButtonItemStyle.Plain, target: self, action: "ToggleSideMenu")
         
         searchBar.delegate = self
         

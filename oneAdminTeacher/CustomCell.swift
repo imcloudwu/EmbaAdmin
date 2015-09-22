@@ -8,6 +8,25 @@
 
 import UIKit
 
+class CourseInfoCell : UITableViewCell{
+    
+    @IBOutlet weak var Icon: UIImageView!
+    @IBOutlet weak var StudentCount: UILabel!
+    @IBOutlet weak var CourseName: UILabel!
+    @IBOutlet weak var SubjectCode: UILabel!
+    @IBOutlet weak var CourseType: UILabel!
+    @IBOutlet weak var CourseTeacher: UILabel!
+    @IBOutlet weak var Semester: UILabel!
+    
+    override func awakeFromNib() {
+        StudentCount.layer.cornerRadius = 5
+        StudentCount.layer.masksToBounds = true
+        
+        Semester.layer.cornerRadius = 5
+        Semester.layer.masksToBounds = true
+    }
+}
+
 class EmbaStudentCell : UITableViewCell{
     
     @IBOutlet weak var Photo: UIImageView!
@@ -20,6 +39,19 @@ class EmbaStudentCell : UITableViewCell{
     override func awakeFromNib() {
         Photo.layer.cornerRadius = Photo.frame.size.width / 2
         Photo.layer.masksToBounds = true
+    }
+}
+
+class EmbaCourseScoreCell : UITableViewCell{
+    
+    @IBOutlet weak var CourseName: UILabel!
+    @IBOutlet weak var CourseInfo: UILabel!
+    @IBOutlet weak var CourseScore: UILabel!
+    @IBOutlet weak var CheckImage: UIImageView!
+    
+    override func awakeFromNib() {
+        CourseScore.layer.cornerRadius = CourseScore.frame.size.width / 2
+        CourseScore.layer.masksToBounds = true
     }
 }
 

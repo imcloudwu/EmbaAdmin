@@ -45,14 +45,14 @@ class SideMenuViewCtrl: UIViewController{
     
     @IBAction func Btn1(sender: AnyObject) {
         
-        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("ClassQuery") as! UIViewController
+        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("StudentQuery") as! UIViewController
         
         ChangeContentView(nextView)
     }
     
     @IBAction func Btn2(sender: AnyObject) {
         
-        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("MessageQuery") as! UIViewController
+        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("CourseQuery") as! UIViewController
         
         ChangeContentView(nextView)
     }

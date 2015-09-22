@@ -17,7 +17,6 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
     var _displayData = [DisplayItem]()
     
     var IsBasicPage = true
-    var MustClear = false
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -26,6 +25,9 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        tableView.estimatedRowHeight = 51.0
+        tableView.rowHeight = UITableViewAutomaticDimension
         
         //self.automaticallyAdjustsScrollViewInsets = true
         
@@ -38,10 +40,6 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
         }
         else{
             SetOtherInfo()
-        }
-        
-        if MustClear{
-            ClearAll()
         }
         
         // Do any additional setup after loading the view, typically from a nib.
@@ -67,7 +65,7 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
         
         var index = 1
         for email in GetEmails(StudentData.Emails){
-            _displayData.append(DisplayItem(Title: "電子郵件\(index)", Value: email, OtherInfo: "", ColorAlarm: false))
+            _displayData.append(DisplayItem(Title: "電子郵件\(index)", Value: email, OtherInfo: "email", ColorAlarm: false))
             index++
         }
     }
@@ -81,13 +79,10 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
         for company in StudentData.Companys{
             _displayData.append(DisplayItem(Title: "工作經歷\(index) / 公司", Value: company.Name, OtherInfo: "", ColorAlarm: false))
             _displayData.append(DisplayItem(Title: "工作經歷\(index) / 職稱", Value: company.Position, OtherInfo: "", ColorAlarm: false))
+            
+            index++
         }
         
-    }
-    
-    func ClearAll(){
-        _displayData = [DisplayItem]()
-        _displayData.append(DisplayItem(Title: "", Value: "沒有課程資料", OtherInfo: "", ColorAlarm: false))
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
@@ -96,6 +91,17 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         let data = _displayData[indexPath.row]
+        
+//        var cell = tableView.dequeueReusableCellWithIdentifier("cell") as? UITableViewCell
+//        
+//        if cell == nil{
+//            cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "cell")
+//            cell?.textLabel?.numberOfLines = 0
+//            cell?.detailTextLabel?.numberOfLines = 0
+//        }
+//        
+//        cell?.textLabel?.text = data.Title
+//        cell?.detailTextLabel?.text = data.Value
         
         let cell = tableView.dequeueReusableCellWithIdentifier("StudentBasicInfoCell") as! StudentBasicInfoCell
         
@@ -108,12 +114,38 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
         let data = _displayData[indexPath.row]
         
-        if data.OtherInfo == "phoneNumber"{
+        switch data.OtherInfo{
+            
+        case "address" :
+            
+            let alert = UIAlertController(title: "繼續？", message: "即將開啟Apple map", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (okaction) -> Void in
+                GoogleMap(data.Value)
+            }))
+            
+            self.presentViewController(alert, animated: true, completion: nil)
+            
+            break
+            
+        case "phoneNumber" :
             DialNumber(data.Value)
-        }
-        
-        if data.OtherInfo == "address"{
-            GoogleMap(data.Value)
+            break
+            
+        case "email" :
+            
+            let alert = UIAlertController(title: "繼續？", message: "即將進行電子郵件編輯", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (okaction) -> Void in
+                SendEmail(data.Value)
+            }))
+            
+            self.presentViewController(alert, animated: true, completion: nil)
+            
+            break
+            
+        default:
+            break
         }
     }
     
@@ -180,49 +212,6 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
         return retVal
     }
     
-    func DialNumber(phoneNumber:String){
-        if let urlEncoding = phoneNumber.UrlEncoding{
-            let phone = "telprompt://" + urlEncoding
-            let url:NSURL = NSURL(string:phone)!
-            UIApplication.sharedApplication().openURL(url)
-        }
-    }
-    
-    func GoogleMap(address:String){
-        
-        if let urlEncoding = address.UrlEncoding{
-            
-            let appleMap = "http://maps.apple.com/?q=\(urlEncoding)"
-            let appleUrl:NSURL = NSURL(string:appleMap)!
-            
-            let alert = UIAlertController(title: "繼續？", message: "即將開啟Apple map", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (okaction) -> Void in
-                UIApplication.sharedApplication().openURL(appleUrl)
-            }))
-            
-            self.presentViewController(alert, animated: true, completion: nil)
-            
-//            let mapLink = "comgooglemapsurl://www.google.com.tw/maps/place/" + urlEncoding
-//            let url:NSURL = NSURL(string:mapLink)!
-            
-//            if UIApplication.sharedApplication().canOpenURL(url) {
-//                UIApplication.sharedApplication().openURL(url)
-//            }
-//            else{
-//                var alert = UIAlertController(title: "繼續?", message: "需要安裝Google Map才能進行", preferredStyle: UIAlertControllerStyle.Alert)
-//                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
-//                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (okaction) -> Void in
-//                    let itunes = "https://itunes.apple.com/app/id585027354"
-//                    let itunesUrl:NSURL = NSURL(string:itunes)!
-//                    UIApplication.sharedApplication().openURL(itunesUrl)
-//                }))
-//                
-//                self.presentViewController(alert, animated: true, completion: nil)
-//            }
-        }
-    }
-    
 //    func LockBtnEnableCheck(){
 //        if contains(Global.Students, StudentData){
 //            AddBtn.enabled = false
@@ -232,3 +221,5 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
 //        }
 //    }
 }
+
+

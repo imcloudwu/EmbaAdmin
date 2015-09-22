@@ -81,6 +81,10 @@ struct SemesterItem : Equatable,Comparable{
     
     var Description: String {
         get {
+            if Semester == "0"{
+                return "第\(SchoolYear)學年度夏季學期"
+            }
+            
             return "第\(SchoolYear)學年度\(Semester)學期"
         }
     }

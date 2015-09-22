@@ -119,8 +119,8 @@ class StudentDetailViewCtrl: UIViewController {
             ChangeContainerViewContent(contentView)
         }
         else if Segment.selectedSegmentIndex == 2{
-            let contentView = self.storyboard?.instantiateViewControllerWithIdentifier("studentInfoViewCtrl") as! StudentInfoViewCtrl
-            contentView.MustClear = true
+            let contentView = self.storyboard?.instantiateViewControllerWithIdentifier("EmbaCourseViewCtrl") as! EmbaCourseViewCtrl
+            //contentView.MustClear = true
             ChangeContainerViewContent(contentView)
         }
 //        else if Segment.selectedSegmentIndex == 3{
