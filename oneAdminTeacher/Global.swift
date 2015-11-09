@@ -476,6 +476,28 @@ func GoogleMap(address:String){
     }
 }
 
+func CovertSemesterText(text:String) -> String{
+    
+    switch text{
+        
+    case "夏":
+        return "0"
+    case "上":
+        return "1"
+    case "下":
+        return "2"
+    case "0":
+        return "夏"
+    case "1":
+        return "上"
+    case "2":
+        return "下"
+    default:
+        return ""
+    }
+    
+}
+
 
 
 

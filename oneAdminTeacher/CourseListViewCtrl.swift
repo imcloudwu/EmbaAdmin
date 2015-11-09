@@ -92,6 +92,7 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
                 let DeptName = course["DeptName"].stringValue
                 let SubjectCode = course["SubjectCode"].stringValue
                 let SubjectName = course["SubjectName"].stringValue
+                let CourseCount = course["CourseCount"].stringValue
                 
                 var Credit = 0
                 
@@ -100,16 +101,26 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
                 }
                 
                 var Teachers = [String]()
+                var Assistants = [String]()
+                
                 if let teachers = course["CourseTeacher"]["Teacher"].all{
                     
                     for teacher in teachers{
-                        Teachers.append(teacher["TeacherName"].stringValue)
+                        
+                        let prefix = teacher["Perfix"].stringValue
+                        let teacheName = teacher["TeacherName"].stringValue
+                        
+                        if prefix == "教師"{
+                            Teachers.append(teacheName)
+                        }else{
+                            Assistants.append(teacheName)
+                        }
                     }
                 }
                 
                 var sysm = SemesterItem(SchoolYear: SchoolYear,Semester: Semester)
                 
-                var course = CourseInfoItem(CourseID: CourseID, CourseName: CourseName, Credit: Credit, CourseType: CourseType, DeptName: DeptName, SubjectCode: SubjectCode, SubjectName: SubjectName, Teachers: Teachers, Semester: sysm)
+                var course = CourseInfoItem(CourseID: CourseID, CourseName: CourseName, Credit: Credit, CourseType: CourseType, DeptName: DeptName, SubjectCode: SubjectCode, SubjectName: SubjectName, Teachers: Teachers, Assistants : Assistants, Semester: sysm,StudentCount : CourseCount.intValue)
                 
                 retVal.append(course)
             }
@@ -139,15 +150,26 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         cell.CourseName.text = data.CourseName
         cell.SubjectCode.text = "課號: \(data.SubjectCode)"
         cell.CourseType.text = "類別: \(data.CourseType)"
-        cell.CourseTeacher.text = data.Teachers.count > 0 ? "教師: \(data.Teachers[0])" : "教師:"
+        cell.CourseTeacher.text = "教師: " + ",".join(data.Teachers)
         
         cell.Icon.image = data.CourseType == "核心必修" ? Geometry : Literature
         
-        cell.StudentCount.text = "人數\n\(Int(arc4random_uniform(999)))"
+        cell.StudentCount.text = "人數\n\(data.StudentCount)"
         
         cell.Semester.text = data.Semester.SchoolYear + " " + CovertSemesterText(data.Semester.Semester)
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
+        
+        let data = self._DisplayData[indexPath.row]
+        
+        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("CourseDetailViewCtrl") as! CourseDetailViewCtrl
+        
+        nextView.CourseInfoItemData = data
+        
+        self.navigationController?.pushViewController(nextView, animated: true)
     }
     
     //Mark : SearchBar
@@ -217,7 +239,7 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
                 return true
             }
             
-            return course.Semester.Semester == self.CovertSemesterText(text)
+            return course.Semester.Semester == CovertSemesterText(text)
             
 //            switch text{
 //                
@@ -236,28 +258,6 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         return founds
     }
     
-    func CovertSemesterText(text:String) -> String{
-        
-        switch text{
-            
-        case "夏":
-            return "0"
-        case "上":
-            return "1"
-        case "下":
-            return "2"
-        case "0":
-            return "夏"
-        case "1":
-            return "上"
-        case "2":
-            return "下"
-        default:
-            return ""
-        }
-        
-    }
-    
 }
 
 struct CourseInfoItem{
@@ -269,5 +269,7 @@ struct CourseInfoItem{
     var SubjectCode:String
     var SubjectName:String
     var Teachers:[String]
+    var Assistants:[String]
     var Semester:SemesterItem
+    var StudentCount : Int
 }

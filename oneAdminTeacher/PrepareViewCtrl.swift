@@ -62,9 +62,9 @@ class PrepareViewCtrl: UIViewController {
                                 EnableSideMenu()
                                 
                                 let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("StudentQuery") as! UIViewController
+                                
                                 ChangeContentView(nextView)
                             }
-                            
                         }
                         else{
                             self.statusLabel.text = "登錄過程發生失敗..."

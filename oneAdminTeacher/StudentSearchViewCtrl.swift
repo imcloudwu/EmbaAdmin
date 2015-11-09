@@ -72,7 +72,7 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         var con = GetCommonConnect("test.emba.ntu.edu.tw")
         var err : DSFault!
         
-        var rsp = con.sendRequestWithXmlType("main.QueryStudent", bodyContent: "<Request><Condition><Or><QueryName>\(value)</QueryName><QueryCompany>\(value)</QueryCompany><QuerySchoolName>\(value)</QuerySchoolName></Or></Condition></Request>", &err)
+        var rsp = con.sendRequestWithXmlType("main.QueryStudent", bodyContent: "<Request><Condition><Or><StudentName>\(value)</StudentName><Company>\(value)</Company><EduSchoolName>\(value)</EduSchoolName><ClassName>\(value)</ClassName></Or></Condition></Request>", &err)
         
         if err != nil{
             ShowErrorAlert(self,"查詢發生錯誤",err.message)
@@ -191,10 +191,10 @@ class EmbaStudent{
     var Emails : String
     var Companys : [Company]
     
-    var Phone : PhoneData
-    var Address : AddressData
+    var Phone : PhoneData!
+    var Address : AddressData!
     
-    init(Id: String, Name: String, EnglishName: String, ClassName: String, Birthdate: String, BirthPlace: String, StudentNumber: String, IdNumber: String, Gender: String, EnrollYear: String, SchoolName: String, Department: String, Emails: String, Photo: UIImage!, Companys: [Company], Phone: PhoneData, Address: AddressData){
+    init(Id: String, Name: String, EnglishName: String, ClassName: String, Birthdate: String, BirthPlace: String, StudentNumber: String, IdNumber: String, Gender: String, EnrollYear: String, SchoolName: String, Department: String, Emails: String, Photo: UIImage!, Companys: [Company], Phone: PhoneData!, Address: AddressData!){
         
         self.Id = Id
         self.Name = Name
