@@ -18,6 +18,7 @@ class CourseDetailViewCtrl: UIViewController {
     
     var ExpandBtn : UIBarButtonItem!
     
+    @IBOutlet weak var CourseName: UILabel!
     @IBOutlet weak var SchoolYear: UILabel!
     @IBOutlet weak var Semester: UILabel!
     @IBOutlet weak var Type: UILabel!
@@ -34,7 +35,7 @@ class CourseDetailViewCtrl: UIViewController {
         
         if Segment.selectedSegmentIndex == 0{
             
-            var newController = self.storyboard?.instantiateViewControllerWithIdentifier("AttendStudentViewCtrl") as! AttendStudentViewCtrl
+            let newController = self.storyboard?.instantiateViewControllerWithIdentifier("AttendStudentViewCtrl") as! AttendStudentViewCtrl
             
             newController.CourseInfoItemData = CourseInfoItemData
             
@@ -42,7 +43,15 @@ class CourseDetailViewCtrl: UIViewController {
         }
         else if Segment.selectedSegmentIndex == 1{
             
-            var newController = self.storyboard?.instantiateViewControllerWithIdentifier("CourseTimeViewCtrl") as! CourseTimeViewCtrl
+            let newController = self.storyboard?.instantiateViewControllerWithIdentifier("CourseTimeViewCtrl") as! CourseTimeViewCtrl
+            
+            newController.CourseInfoItemData = CourseInfoItemData
+            
+            ChangeContainerViewContent(newController)
+        }
+        else if Segment.selectedSegmentIndex == 2{
+            
+            let newController = self.storyboard?.instantiateViewControllerWithIdentifier("CourseCaseViewCtrl") as! CourseCaseViewCtrl
             
             newController.CourseInfoItemData = CourseInfoItemData
             
@@ -50,9 +59,9 @@ class CourseDetailViewCtrl: UIViewController {
         }
         else{
             
-            var newController = self.storyboard?.instantiateViewControllerWithIdentifier("CourseCaseViewCtrl") as! CourseCaseViewCtrl
+            let newController = self.storyboard?.instantiateViewControllerWithIdentifier("CourseWebViewCtrl") as! CourseWebViewCtrl
             
-            newController.CourseInfoItemData = CourseInfoItemData
+            newController.Url = CourseInfoItemData.Syllabus
             
             ChangeContainerViewContent(newController)
         }
@@ -61,10 +70,10 @@ class CourseDetailViewCtrl: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var pics = ["background.png","background5.png"]
-        let randomIndex = Int(arc4random_uniform(2))
+//        var pics = ["background.png","background5.png"]
+//        let randomIndex = Int(arc4random_uniform(2))
         
-        var background = UIImageView(image: UIImage(named: pics[randomIndex]))
+        let background = UIImageView(image: UIImage(named: "背景圖片.jpg"))
         background.frame = SubTitleView.bounds
         //nback.contentMode = UIViewContentMode.ScaleAspectFill
         SubTitleView.insertSubview(background, atIndex: 0)
@@ -72,12 +81,13 @@ class CourseDetailViewCtrl: UIViewController {
         ExpandBtn = UIBarButtonItem(image: upArrow, style: UIBarButtonItemStyle.Plain, target: self, action: "ChangeHeight")
         self.navigationItem.rightBarButtonItem = ExpandBtn
         
+        CourseName.text = CourseInfoItemData.CourseName
         SchoolYear.text = CourseInfoItemData.Semester.SchoolYear
         Semester.text = CovertSemesterText(CourseInfoItemData.Semester.Semester)
         Type.text = CourseInfoItemData.CourseType
         Credit.text = "\(CourseInfoItemData.Credit)"
-        Teacher.text = ",".join(CourseInfoItemData.Teachers)
-        Assistant.text = ",".join(CourseInfoItemData.Assistants)
+        Teacher.text = CourseInfoItemData.Teachers.joinWithSeparator(",")
+        Assistant.text = CourseInfoItemData.Assistants.joinWithSeparator(",")
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -106,7 +116,7 @@ class CourseDetailViewCtrl: UIViewController {
         
         addChildViewController(vc)
         
-        for sub in EmbedView.subviews as! [UIView]{
+        for sub in EmbedView.subviews {
             sub.removeFromSuperview()
         }
         

@@ -27,6 +27,7 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
     
     var HerderTag = "embaHeader"
     
+    var TotalCourse = 0
     var TotalCredits = 0
     var AchieveCredits = 0
     
@@ -47,7 +48,7 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
             
-            var data = self.AddHeaderData(self.GetData())
+            let data = self.AddHeaderData(self.GetData())
             
             dispatch_async(dispatch_get_main_queue(), {
                 
@@ -76,13 +77,13 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
     func tableView(tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int)
     {
         let header = view as! UITableViewHeaderFooterView
-        header.textLabel.textAlignment = NSTextAlignment.Right
+        header.textLabel!.textAlignment = NSTextAlignment.Right
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?{
         
         if self._Datas.count > 0{
-            return "已修學分 \(AchieveCredits) / \(TotalCredits)"
+            return "課程 : \(TotalCourse) 已修學分 : \(AchieveCredits) / \(TotalCredits)"
         }
         
         return ""
@@ -100,7 +101,7 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
             return 30
         }
         
-        return 64
+        return 74
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
@@ -111,7 +112,7 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
             
         case HerderTag:
             
-            var cell = tableView.dequeueReusableCellWithIdentifier(HerderTag) as? UITableViewCell
+            var cell = tableView.dequeueReusableCellWithIdentifier(HerderTag)
             
             if cell == nil{
                 cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: HerderTag)
@@ -124,14 +125,11 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
             
         default:
             
-            var cell = tableView.dequeueReusableCellWithIdentifier("EmbaCourseScoreCell") as! EmbaCourseScoreCell
-            
-            var sunInfo = ""
-            sunInfo += data.CourseType.isEmpty ? "\(data.Credit) 學分" : data.CourseType + "/\(data.Credit) 學分"
-            sunInfo += data.TeacherName.isEmpty ? data.TeacherName : "/\(data.TeacherName)"
+            let cell = tableView.dequeueReusableCellWithIdentifier("EmbaCourseScoreCell") as! EmbaCourseScoreCell
             
             cell.CourseName.text = data.CourseName
-            cell.CourseInfo.text = sunInfo
+            cell.CourseInfo.text = data.CourseType.isEmpty ? "\(data.Credit) 學分" : data.CourseType + " / \(data.Credit) 學分"
+            cell.CourseTeachers.text = data.Teachers.joinWithSeparator(",")
             cell.CourseScore.text = data.Score
             cell.CheckImage.image = data.IsPass ? CheckImage : NoneImage
             
@@ -144,17 +142,23 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         
         var retVal = [CourseScoreItem]()
         
-        var con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect("test.emba.ntu.edu.tw")
         var err : DSFault!
         
-        var rsp = con.SendRequest("main.QueryStudentScore", bodyContent: "<Request><Condition><StudentID>\(StudentData.Id)</StudentID></Condition></Request>", &err)
+        let rsp = con.SendRequest("main.QueryStudentScore", bodyContent: "<Request><Condition><Or><StudentID>\(StudentData.Id)</StudentID></Or></Condition></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self, "成績查詢發生錯誤", "")
+            ShowErrorAlert(self, title: "成績查詢發生錯誤", msg: "")
         }
         
-        var nserr : NSError?
-        var xml = AEXMLDocument(xmlData: rsp.dataValue, error: &nserr)
+        var xml: AEXMLDocument?
+        do {
+            xml = try AEXMLDocument(xmlData: rsp.dataValue)
+        } catch _ {
+            xml = nil
+        }
+        
+        var mergeList = [String]()
         
         if let scores = xml?.root["Response"]["Score"].all{
             
@@ -169,33 +173,45 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
                 let Score = score["Score"].stringValue
                 
                 var Credit : Int = 0
-                if let credit = score["Credit"].stringValue.toInt(){
+                if let credit = Int(score["Credit"].stringValue){
                     Credit = credit
                 }
                 
-                var TeacherName = ""
+                var Teachers = [String]()
+                
                 if let teachers = score["Teachers"]["Teacher"].all{
                     
                     for teacher in teachers{
-                        TeacherName = teacher["TeacherName"].stringValue
-                        break
+                        
+                        let teacherName = teacher["TeacherName"].stringValue
+                        
+                        if !teacherName.isEmpty{
+                            Teachers.append(teacherName)
+                        }
                     }
                 }
                 
-                var sysm = SemesterItem(SchoolYear: SchoolYear,Semester: Semester)
+                let sysm = SemesterItem(SchoolYear: SchoolYear,Semester: Semester)
                 
-                var course = CourseScoreItem(Semester: sysm, CourseName: SubjectName, CourseType: CourseType, Score: Score, TeacherName: TeacherName, Credit: Credit, IsPass: IsPass, IsRequired: IsRequired)
+                let course = CourseScoreItem(Semester: sysm, CourseName: SubjectName, CourseType: CourseType, Score: Score, Teachers: Teachers, Credit: Credit, IsPass: IsPass, IsRequired: IsRequired)
                 
                 if !course.CourseName.isEmpty{
-                    retVal.append(course)
+                    
+                    let key = course.Semester.Description + "#" + course.CourseName
+                    
+                    if !mergeList.contains(key){
+                        mergeList.append(key)
+                        retVal.append(course)
+                    }
+                    
                 }
                 
             }
         }
         
-        retVal.sort({$0.Semester > $1.Semester})
+        //retVal.sortInPlace({$0.Semester > $1.Semester})
         
-        return retVal
+        return retVal.sort({$0.Semester > $1.Semester})
     }
     
     func AddHeaderData(sourceData:[CourseScoreItem]) -> [CourseScoreItem]{
@@ -210,7 +226,7 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
                 
                 lastSemester = course.Semester
                 
-                retVal.append(CourseScoreItem(Semester: lastSemester, CourseName: HerderTag, CourseType: "", Score: "", TeacherName: "", Credit: 0, IsPass: false, IsRequired: false))
+                retVal.append(CourseScoreItem(Semester: lastSemester, CourseName: HerderTag, CourseType: "", Score: "", Teachers: [String](), Credit: 0, IsPass: false, IsRequired: false))
             }
             
             retVal.append(course)
@@ -221,12 +237,14 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
     
     func CountCredits(){
         
+        TotalCourse = 0
         TotalCredits = 0
         AchieveCredits = 0
         
         for course in self._Datas{
             TotalCredits += course.Credit
             AchieveCredits += course.IsPass ? course.Credit : 0
+            TotalCourse += course.CourseName == HerderTag ? 0 : 1
         }
     }
     
@@ -237,7 +255,7 @@ struct CourseScoreItem{
     var CourseName:String
     var CourseType:String
     var Score:String
-    var TeacherName:String
+    var Teachers:[String]
     var Credit:Int
     var IsPass:Bool
     var IsRequired:Bool

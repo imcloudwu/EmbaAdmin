@@ -8,9 +8,41 @@
 
 import UIKit
 
+class EmbaTeacherCell : UITableViewCell{
+    
+    @IBOutlet weak var Tag1: UILabel!
+    @IBOutlet weak var Tag2: UILabel!
+    @IBOutlet weak var Name: UILabel!
+    @IBOutlet weak var Info: UILabel!
+    @IBOutlet weak var Photo: UIImageView!
+    
+    override func awakeFromNib() {
+        Photo.layer.masksToBounds = true
+        Photo.layer.cornerRadius = Photo.frame.width / 2
+        
+        Tag1.layer.masksToBounds = true
+        Tag1.layer.cornerRadius = 5
+        
+        Tag2.layer.masksToBounds = true
+        Tag2.layer.cornerRadius = 5
+    }
+}
+
+
+class EmbaClassCell : UITableViewCell{
+    
+    @IBOutlet weak var GradeYear: UILabel!
+    @IBOutlet weak var ClassName: UILabel!
+    @IBOutlet weak var OtherInfo: UILabel!
+    
+    override func awakeFromNib() {
+        GradeYear.layer.cornerRadius = 5
+        GradeYear.layer.masksToBounds = true
+    }
+}
+
 class CourseInfoCell : UITableViewCell{
     
-    @IBOutlet weak var Icon: UIImageView!
     @IBOutlet weak var StudentCount: UILabel!
     @IBOutlet weak var CourseName: UILabel!
     @IBOutlet weak var SubjectCode: UILabel!
@@ -46,6 +78,7 @@ class EmbaCourseScoreCell : UITableViewCell{
     
     @IBOutlet weak var CourseName: UILabel!
     @IBOutlet weak var CourseInfo: UILabel!
+    @IBOutlet weak var CourseTeachers: UILabel!
     @IBOutlet weak var CourseScore: UILabel!
     @IBOutlet weak var CheckImage: UIImageView!
     

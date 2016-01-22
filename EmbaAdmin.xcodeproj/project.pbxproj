@@ -30,6 +30,8 @@
 		6114C8FF1B43A2A800C73E5E /* Diploma-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 6114C8FB1B43A2A800C73E5E /* Diploma-32.png */; };
 		6114C9001B43A2A800C73E5E /* Purchase Order-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 6114C8FC1B43A2A800C73E5E /* Purchase Order-32.png */; };
 		6114C9011B43A2A800C73E5E /* Today-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 6114C8FD1B43A2A800C73E5E /* Today-32.png */; };
+		611B71751C50C96700B95F64 /* CourseWebViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B71741C50C96700B95F64 /* CourseWebViewCtrl.swift */; };
+		611B71771C50D18E00B95F64 /* ClassListViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B71761C50D18E00B95F64 /* ClassListViewCtrl.swift */; };
 		612123ED1B411525000AA07D /* User-100.png in Resources */ = {isa = PBXBuildFile; fileRef = 612123EC1B411525000AA07D /* User-100.png */; };
 		612123F11B412A3B000AA07D /* Phone-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 612123F01B412A3B000AA07D /* Phone-32.png */; };
 		612123F31B412BBB000AA07D /* StudentInfoViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612123F21B412BBB000AA07D /* StudentInfoViewCtrl.swift */; };
@@ -51,12 +53,19 @@
 		615BB2601B3BE3FC00864052 /* OAuthHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615BB25F1B3BE3FC00864052 /* OAuthHelper.swift */; };
 		615BB2621B3BE43100864052 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615BB2611B3BE43100864052 /* SwiftyJSON.swift */; };
 		615BB2641B3BFC5A00864052 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615BB2631B3BFC5A00864052 /* Global.swift */; };
+		615C18041C4E0D200010AA61 /* 全校班級.png in Resources */ = {isa = PBXBuildFile; fileRef = 615C17FE1C4E0D200010AA61 /* 全校班級.png */; };
+		615C18051C4E0D200010AA61 /* 學生.png in Resources */ = {isa = PBXBuildFile; fileRef = 615C17FF1C4E0D200010AA61 /* 學生.png */; };
+		615C18061C4E0D200010AA61 /* 左方功能項目.png in Resources */ = {isa = PBXBuildFile; fileRef = 615C18001C4E0D200010AA61 /* 左方功能項目.png */; };
+		615C18071C4E0D200010AA61 /* 老師.png in Resources */ = {isa = PBXBuildFile; fileRef = 615C18011C4E0D200010AA61 /* 老師.png */; };
+		615C18081C4E0D200010AA61 /* 背景圖片.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 615C18021C4E0D200010AA61 /* 背景圖片.jpg */; };
+		615C18091C4E0D200010AA61 /* 課程.png in Resources */ = {isa = PBXBuildFile; fileRef = 615C18031C4E0D200010AA61 /* 課程.png */; };
 		6173AACF1B5791190049EB63 /* Find User Filled-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 6173AACC1B5791190049EB63 /* Find User Filled-32.png */; };
 		6173AAD11B5791190049EB63 /* Settings Filled-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 6173AACE1B5791190049EB63 /* Settings Filled-32.png */; };
 		6173AAD31B5791860049EB63 /* Message Filled-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 6173AAD21B5791860049EB63 /* Message Filled-32.png */; };
 		6173AAD51B5797920049EB63 /* sidebackground.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6173AAD41B5797920049EB63 /* sidebackground.jpg */; };
 		6173AAD71B57A9930049EB63 /* DisplayViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6173AAD61B57A9930049EB63 /* DisplayViewCtrl.swift */; };
 		61763E3A1B2ECD3A004A0DCD /* oneAdminTeacher.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61763E381B2ECD3A004A0DCD /* oneAdminTeacher.xcdatamodeld */; };
+		617CBD1B1C520AC300398620 /* TeacherSearchViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617CBD1A1C520AC200398620 /* TeacherSearchViewCtrl.swift */; };
 		617F32311B60F90100A03CD6 /* Message Filled-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 617F32301B60F90100A03CD6 /* Message Filled-50.png */; };
 		6189CFA71B3D43B00098AAD7 /* SchoolOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6189CFA61B3D43B00098AAD7 /* SchoolOptionsView.swift */; };
 		6198E15A1BEC921F00D66CC7 /* AttendStudentViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6198E1591BEC921F00D66CC7 /* AttendStudentViewCtrl.swift */; };
@@ -81,8 +90,6 @@
 		61C5E5901B4BE19E008F1DEF /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C5E58F1B4BE19E008F1DEF /* Extension.swift */; };
 		61C680901BAC0CCD00BCF9B7 /* Courses Filled-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C6808F1BAC0CCD00BCF9B7 /* Courses Filled-32.png */; };
 		61C680921BAC0D8F00BCF9B7 /* CourseListViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C680911BAC0D8F00BCF9B7 /* CourseListViewCtrl.swift */; };
-		61C680941BAC1F8C00BCF9B7 /* Literature-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C680931BAC1F8C00BCF9B7 /* Literature-50.png */; };
-		61C680961BAC255900BCF9B7 /* Geometry-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C680951BAC255900BCF9B7 /* Geometry-50.png */; };
 		61CA692E1B5E5B1F002D2842 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CA692D1B5E5B1F002D2842 /* SystemConfiguration.framework */; };
 		61CA69301B5E5B2F002D2842 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CA692F1B5E5B2F002D2842 /* AudioToolbox.framework */; };
 		61CA69321B5E5B3C002D2842 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CA69311B5E5B3C002D2842 /* libstdc++.6.dylib */; };
@@ -97,11 +104,6 @@
 		61DACF6F1B6225FF001D5633 /* MessageCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DACF6E1B6225FF001D5633 /* MessageCoreData.swift */; };
 		61DC99371B7351B800C6BA66 /* WatchReaderListViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DC99361B7351B800C6BA66 /* WatchReaderListViewCtrl.swift */; };
 		61E264BA1B9850BF002B1437 /* StudentSearchViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E264B91B9850BF002B1437 /* StudentSearchViewCtrl.swift */; };
-		61E282401B6B76A4003DE4B1 /* 1CampusAdminIcon-58.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E2823B1B6B76A4003DE4B1 /* 1CampusAdminIcon-58.png */; };
-		61E282411B6B76A4003DE4B1 /* 1CampusAdminIcon-80.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E2823C1B6B76A4003DE4B1 /* 1CampusAdminIcon-80.png */; };
-		61E282421B6B76A4003DE4B1 /* 1CampusAdminIcon-87.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E2823D1B6B76A4003DE4B1 /* 1CampusAdminIcon-87.png */; };
-		61E282431B6B76A4003DE4B1 /* 1CampusAdminIcon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E2823E1B6B76A4003DE4B1 /* 1CampusAdminIcon-120.png */; };
-		61E282441B6B76A4003DE4B1 /* 1CampusAdminIcon-180.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E2823F1B6B76A4003DE4B1 /* 1CampusAdminIcon-180.png */; };
 		61E308D71B2A997400BE36D0 /* Classroom Filled-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E308D51B2A997400BE36D0 /* Classroom Filled-50.png */; };
 		61E82D761B7DA7A7001D3DA0 /* PDBarChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E82D6E1B7DA7A7001D3DA0 /* PDBarChart.swift */; };
 		61E82D771B7DA7A7001D3DA0 /* PDChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E82D6F1B7DA7A7001D3DA0 /* PDChart.swift */; };
@@ -160,6 +162,8 @@
 		6114C8FB1B43A2A800C73E5E /* Diploma-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Diploma-32.png"; path = "icon/Diploma-32.png"; sourceTree = SOURCE_ROOT; };
 		6114C8FC1B43A2A800C73E5E /* Purchase Order-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Purchase Order-32.png"; path = "icon/Purchase Order-32.png"; sourceTree = SOURCE_ROOT; };
 		6114C8FD1B43A2A800C73E5E /* Today-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Today-32.png"; path = "icon/Today-32.png"; sourceTree = SOURCE_ROOT; };
+		611B71741C50C96700B95F64 /* CourseWebViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseWebViewCtrl.swift; sourceTree = "<group>"; };
+		611B71761C50D18E00B95F64 /* ClassListViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassListViewCtrl.swift; sourceTree = "<group>"; };
 		612123EC1B411525000AA07D /* User-100.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "User-100.png"; sourceTree = "<group>"; };
 		612123F01B412A3B000AA07D /* Phone-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Phone-32.png"; sourceTree = "<group>"; };
 		612123F21B412BBB000AA07D /* StudentInfoViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentInfoViewCtrl.swift; sourceTree = "<group>"; };
@@ -181,12 +185,19 @@
 		615BB25F1B3BE3FC00864052 /* OAuthHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthHelper.swift; sourceTree = "<group>"; };
 		615BB2611B3BE43100864052 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		615BB2631B3BFC5A00864052 /* Global.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		615C17FE1C4E0D200010AA61 /* 全校班級.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "全校班級.png"; sourceTree = "<group>"; };
+		615C17FF1C4E0D200010AA61 /* 學生.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "學生.png"; sourceTree = "<group>"; };
+		615C18001C4E0D200010AA61 /* 左方功能項目.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "左方功能項目.png"; sourceTree = "<group>"; };
+		615C18011C4E0D200010AA61 /* 老師.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "老師.png"; sourceTree = "<group>"; };
+		615C18021C4E0D200010AA61 /* 背景圖片.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "背景圖片.jpg"; sourceTree = "<group>"; };
+		615C18031C4E0D200010AA61 /* 課程.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "課程.png"; sourceTree = "<group>"; };
 		6173AACC1B5791190049EB63 /* Find User Filled-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Find User Filled-32.png"; path = "icon/Find User Filled-32.png"; sourceTree = SOURCE_ROOT; };
 		6173AACE1B5791190049EB63 /* Settings Filled-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Settings Filled-32.png"; path = "icon/Settings Filled-32.png"; sourceTree = SOURCE_ROOT; };
 		6173AAD21B5791860049EB63 /* Message Filled-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Message Filled-32.png"; path = "icon/Message Filled-32.png"; sourceTree = SOURCE_ROOT; };
 		6173AAD41B5797920049EB63 /* sidebackground.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = sidebackground.jpg; path = image/sidebackground.jpg; sourceTree = SOURCE_ROOT; };
 		6173AAD61B57A9930049EB63 /* DisplayViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisplayViewCtrl.swift; sourceTree = "<group>"; };
 		61763E391B2ECD3A004A0DCD /* oneAdminTeacher.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = oneAdminTeacher.xcdatamodel; sourceTree = "<group>"; };
+		617CBD1A1C520AC200398620 /* TeacherSearchViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeacherSearchViewCtrl.swift; sourceTree = "<group>"; };
 		617F32301B60F90100A03CD6 /* Message Filled-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Message Filled-50.png"; path = "icon/Message Filled-50.png"; sourceTree = SOURCE_ROOT; };
 		6189CFA61B3D43B00098AAD7 /* SchoolOptionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchoolOptionsView.swift; sourceTree = "<group>"; };
 		6198E1591BEC921F00D66CC7 /* AttendStudentViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttendStudentViewCtrl.swift; sourceTree = "<group>"; };
@@ -217,8 +228,6 @@
 		61C5E58F1B4BE19E008F1DEF /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		61C6808F1BAC0CCD00BCF9B7 /* Courses Filled-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Courses Filled-32.png"; path = "icon/Courses Filled-32.png"; sourceTree = SOURCE_ROOT; };
 		61C680911BAC0D8F00BCF9B7 /* CourseListViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseListViewCtrl.swift; sourceTree = "<group>"; };
-		61C680931BAC1F8C00BCF9B7 /* Literature-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Literature-50.png"; path = "icon/Literature-50.png"; sourceTree = SOURCE_ROOT; };
-		61C680951BAC255900BCF9B7 /* Geometry-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Geometry-50.png"; path = "icon/Geometry-50.png"; sourceTree = SOURCE_ROOT; };
 		61CA692D1B5E5B1F002D2842 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		61CA692F1B5E5B2F002D2842 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		61CA69311B5E5B3C002D2842 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
@@ -233,11 +242,6 @@
 		61DACF6E1B6225FF001D5633 /* MessageCoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCoreData.swift; sourceTree = "<group>"; };
 		61DC99361B7351B800C6BA66 /* WatchReaderListViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchReaderListViewCtrl.swift; sourceTree = "<group>"; };
 		61E264B91B9850BF002B1437 /* StudentSearchViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentSearchViewCtrl.swift; sourceTree = "<group>"; };
-		61E2823B1B6B76A4003DE4B1 /* 1CampusAdminIcon-58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "1CampusAdminIcon-58.png"; path = "icon/sizes/1CampusAdminIcon-58.png"; sourceTree = SOURCE_ROOT; };
-		61E2823C1B6B76A4003DE4B1 /* 1CampusAdminIcon-80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "1CampusAdminIcon-80.png"; path = "icon/sizes/1CampusAdminIcon-80.png"; sourceTree = SOURCE_ROOT; };
-		61E2823D1B6B76A4003DE4B1 /* 1CampusAdminIcon-87.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "1CampusAdminIcon-87.png"; path = "icon/sizes/1CampusAdminIcon-87.png"; sourceTree = SOURCE_ROOT; };
-		61E2823E1B6B76A4003DE4B1 /* 1CampusAdminIcon-120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "1CampusAdminIcon-120.png"; path = "icon/sizes/1CampusAdminIcon-120.png"; sourceTree = SOURCE_ROOT; };
-		61E2823F1B6B76A4003DE4B1 /* 1CampusAdminIcon-180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "1CampusAdminIcon-180.png"; path = "icon/sizes/1CampusAdminIcon-180.png"; sourceTree = SOURCE_ROOT; };
 		61E308D51B2A997400BE36D0 /* Classroom Filled-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Classroom Filled-50.png"; path = "icon/Classroom Filled-50.png"; sourceTree = SOURCE_ROOT; };
 		61E82D6E1B7DA7A7001D3DA0 /* PDBarChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDBarChart.swift; sourceTree = "<group>"; };
 		61E82D6F1B7DA7A7001D3DA0 /* PDChart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDChart.swift; sourceTree = "<group>"; };
@@ -314,8 +318,12 @@
 		61E308D21B2A893400BE36D0 /* icon */ = {
 			isa = PBXGroup;
 			children = (
-				61C680951BAC255900BCF9B7 /* Geometry-50.png */,
-				61C680931BAC1F8C00BCF9B7 /* Literature-50.png */,
+				615C17FE1C4E0D200010AA61 /* 全校班級.png */,
+				615C17FF1C4E0D200010AA61 /* 學生.png */,
+				615C18001C4E0D200010AA61 /* 左方功能項目.png */,
+				615C18011C4E0D200010AA61 /* 老師.png */,
+				615C18021C4E0D200010AA61 /* 背景圖片.jpg */,
+				615C18031C4E0D200010AA61 /* 課程.png */,
 				61C6808F1BAC0CCD00BCF9B7 /* Courses Filled-32.png */,
 				6101653E1BABB1950092B671 /* Checked-32.png */,
 				61553A1B1B7C6ED400929EBB /* Starred Ticket Filled-25.png */,
@@ -324,11 +332,6 @@
 				61553A151B7C6EA900929EBB /* Starred Ticket-32.png */,
 				61C07E581B7B305B00B05D20 /* Message Filled-32 White.png */,
 				61FB5BA91B7074F80006C962 /* Menu 2-26.png */,
-				61E2823B1B6B76A4003DE4B1 /* 1CampusAdminIcon-58.png */,
-				61E2823C1B6B76A4003DE4B1 /* 1CampusAdminIcon-80.png */,
-				61E2823D1B6B76A4003DE4B1 /* 1CampusAdminIcon-87.png */,
-				61E2823E1B6B76A4003DE4B1 /* 1CampusAdminIcon-120.png */,
-				61E2823F1B6B76A4003DE4B1 /* 1CampusAdminIcon-180.png */,
 				612D051F1B6A3048002E1239 /* Menu-24.png */,
 				61FEC8EA1B678DE80095C52B /* default photo.jpg */,
 				6114855E1B65EB6000B54BBB /* ic_ischool.png */,
@@ -445,13 +448,10 @@
 				61F550AE1B2A7A8E00E26A5D /* image */,
 				61F550881B2A768900E26A5D /* AppDelegate.swift */,
 				61F5508A1B2A768900E26A5D /* FirstViewController.swift */,
-				61CFA3AF1BAAD02400B304CE /* EmbaCourseViewCtrl.swift */,
 				61F5508C1B2A768900E26A5D /* SecondViewController.swift */,
 				61ABA7F41B4FB92C0071F9D4 /* SideMenuViewCtrl.swift */,
-				61E264B91B9850BF002B1437 /* StudentSearchViewCtrl.swift */,
 				615BB2631B3BFC5A00864052 /* Global.swift */,
 				61C5E58B1B4BDF5E008F1DEF /* CommonStruct.swift */,
-				61C680911BAC0D8F00BCF9B7 /* CourseListViewCtrl.swift */,
 				613C58781B2AB1CE00461072 /* CustomCell.swift */,
 				61C5E58F1B4BE19E008F1DEF /* Extension.swift */,
 				611485601B65EEA400B54BBB /* NotificationService.swift */,
@@ -485,9 +485,15 @@
 				61F550931B2A768900E26A5D /* LaunchScreen.xib */,
 				61F550861B2A768900E26A5D /* Supporting Files */,
 				610B307A1BEC5AB4001FDB5D /* CourseDetailViewCtrl.swift */,
+				61CFA3AF1BAAD02400B304CE /* EmbaCourseViewCtrl.swift */,
+				61E264B91B9850BF002B1437 /* StudentSearchViewCtrl.swift */,
+				61C680911BAC0D8F00BCF9B7 /* CourseListViewCtrl.swift */,
 				6198E1591BEC921F00D66CC7 /* AttendStudentViewCtrl.swift */,
 				6198E15B1BECB4B500D66CC7 /* CourseTimeViewCtrl.swift */,
 				61F3934A1BF0748C007C8524 /* CourseCaseViewCtrl.swift */,
+				611B71741C50C96700B95F64 /* CourseWebViewCtrl.swift */,
+				611B71761C50D18E00B95F64 /* ClassListViewCtrl.swift */,
+				617CBD1A1C520AC200398620 /* TeacherSearchViewCtrl.swift */,
 			);
 			path = oneAdminTeacher;
 			sourceTree = "<group>";
@@ -575,6 +581,8 @@
 		61F5507B1B2A768900E26A5D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftMigration = 0720;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = ischool;
 				TargetAttributes = {
@@ -617,16 +625,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				61C680961BAC255900BCF9B7 /* Geometry-50.png in Resources */,
 				61553A1D1B7C6ED400929EBB /* Starred Ticket Filled-25.png in Resources */,
 				61051F301B57463A00755ED5 /* background3.png in Resources */,
 				6114C8FE1B43A2A800C73E5E /* Courses-32.png in Resources */,
 				61E9D7111B566C0600D36552 /* background2.png in Resources */,
+				615C18071C4E0D200010AA61 /* 老師.png in Resources */,
 				6104420C1B44E9FC007D3C98 /* Search Property Filled-32.png in Resources */,
 				610E0A501B53568900186BF3 /* Menu Filled-25.png in Resources */,
-				61E282441B6B76A4003DE4B1 /* 1CampusAdminIcon-180.png in Resources */,
-				61C680941BAC1F8C00BCF9B7 /* Literature-50.png in Resources */,
 				61553A1E1B7C6ED400929EBB /* Starred Ticket-25.png in Resources */,
+				615C18091C4E0D200010AA61 /* 課程.png in Resources */,
 				610CB0921B5523E80051EC76 /* Age-25.png in Resources */,
 				610CB0931B5523E80051EC76 /* Edit Property-25.png in Resources */,
 				61051F321B57463A00755ED5 /* background5.png in Resources */,
@@ -634,9 +641,10 @@
 				6173AAD51B5797920049EB63 /* sidebackground.jpg in Resources */,
 				612123F11B412A3B000AA07D /* Phone-32.png in Resources */,
 				6101653F1BABB1950092B671 /* Checked-32.png in Resources */,
+				615C18051C4E0D200010AA61 /* 學生.png in Resources */,
 				617F32311B60F90100A03CD6 /* Message Filled-50.png in Resources */,
-				61E282421B6B76A4003DE4B1 /* 1CampusAdminIcon-87.png in Resources */,
 				613C58831B2ACDDD00461072 /* Leave Filled-50.png in Resources */,
+				615C18081C4E0D200010AA61 /* 背景圖片.jpg in Resources */,
 				6114C8FF1B43A2A800C73E5E /* Diploma-32.png in Resources */,
 				6173AACF1B5791190049EB63 /* Find User Filled-32.png in Resources */,
 				613C58851B2AD92100461072 /* Star Filled-50.png in Resources */,
@@ -645,6 +653,7 @@
 				6114C9001B43A2A800C73E5E /* Purchase Order-32.png in Resources */,
 				61C07E5A1B7B305B00B05D20 /* Message Filled-32 White.png in Resources */,
 				6173AAD31B5791860049EB63 /* Message Filled-32.png in Resources */,
+				615C18061C4E0D200010AA61 /* 左方功能項目.png in Resources */,
 				61E9D70F1B5656AC00D36552 /* background.png in Resources */,
 				61E308D71B2A997400BE36D0 /* Classroom Filled-50.png in Resources */,
 				61553A191B7C6EA900929EBB /* Starred Ticket-32.png in Resources */,
@@ -659,13 +668,11 @@
 				6173AAD11B5791190049EB63 /* Settings Filled-32.png in Resources */,
 				61FE92E51B58B8BA003BABFE /* Up 4-25.png in Resources */,
 				61FE92E41B58B8BA003BABFE /* Down 4-25.png in Resources */,
+				615C18041C4E0D200010AA61 /* 全校班級.png in Resources */,
 				6114855F1B65EB6000B54BBB /* ic_ischool.png in Resources */,
-				61E282411B6B76A4003DE4B1 /* 1CampusAdminIcon-80.png in Resources */,
 				61F550951B2A768900E26A5D /* LaunchScreen.xib in Resources */,
 				61051F311B57463A00755ED5 /* background4.png in Resources */,
 				61F550921B2A768900E26A5D /* Images.xcassets in Resources */,
-				61E282401B6B76A4003DE4B1 /* 1CampusAdminIcon-58.png in Resources */,
-				61E282431B6B76A4003DE4B1 /* 1CampusAdminIcon-120.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -684,6 +691,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				610ED4311B7DA11E005B4424 /* ChartViewCtrl.swift in Sources */,
+				611B71751C50C96700B95F64 /* CourseWebViewCtrl.swift in Sources */,
 				61ABA7F21B4FB88B0071F9D4 /* MMDrawerVisualState.m in Sources */,
 				61C513ED1B5CFD4700921D2A /* CourseScoreViewCtrl.swift in Sources */,
 				61763E3A1B2ECD3A004A0DCD /* oneAdminTeacher.xcdatamodeld in Sources */,
@@ -699,6 +707,7 @@
 				6112A2301B46355300DA4E77 /* SemesterScoreViewCtrl.swift in Sources */,
 				619D31E31B451647008409F9 /* DisciplineViewCtrl.swift in Sources */,
 				61ABA7F11B4FB88B0071F9D4 /* MMDrawerController.m in Sources */,
+				611B71771C50D18E00B95F64 /* ClassListViewCtrl.swift in Sources */,
 				6105832C1B4BAB4500274EEA /* ExamScoreViewCtrl.swift in Sources */,
 				61C07E5F1B7B36BC00B05D20 /* VoteViewCtrl.swift in Sources */,
 				615BB25A1B3BD4F800864052 /* HttpClient.swift in Sources */,
@@ -721,6 +730,7 @@
 				61A644EF1B79F12700AC0D97 /* OptionEditViewCtrl.swift in Sources */,
 				61C680921BAC0D8F00BCF9B7 /* CourseListViewCtrl.swift in Sources */,
 				615BB25C1B3BD80300864052 /* Util.swift in Sources */,
+				617CBD1B1C520AC300398620 /* TeacherSearchViewCtrl.swift in Sources */,
 				61E82D791B7DA7A7001D3DA0 /* PDLineChart.swift in Sources */,
 				613B68501B6F4FDF0069637F /* OutboxSendViewCtrl.swift in Sources */,
 				612123F31B412BBB000AA07D /* StudentInfoViewCtrl.swift in Sources */,
@@ -869,6 +879,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -890,6 +901,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

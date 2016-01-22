@@ -55,32 +55,79 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
     }
     
     func SetBasicInfo(){
-        _displayData.append(DisplayItem(Title: "所屬班級", Value: StudentData.ClassName, OtherInfo: "", ColorAlarm: false))
-        _displayData.append(DisplayItem(Title: "行動電話", Value: StudentData.Phone.SmsPhone, OtherInfo: "phoneNumber", ColorAlarm: false))
-        _displayData.append(DisplayItem(Title: "戶籍電話", Value: StudentData.Phone.PermanentPhone, OtherInfo: "phoneNumber", ColorAlarm: false))
-        _displayData.append(DisplayItem(Title: "聯絡電話", Value: StudentData.Phone.ContactPhone, OtherInfo: "phoneNumber", ColorAlarm: false))
-        _displayData.append(DisplayItem(Title: "郵遞地址", Value: GetAddress(StudentData.Address.MailingAddress), OtherInfo: "address", ColorAlarm: false))
-        _displayData.append(DisplayItem(Title: "戶籍地址", Value: GetAddress(StudentData.Address.PermanentAddress), OtherInfo: "address", ColorAlarm: false))
-        _displayData.append(DisplayItem(Title: "其他地址", Value: GetAddress(StudentData.Address.OtherAddress), OtherInfo: "address", ColorAlarm: false))
+        
+        if !StudentData.Phone.SmsPhone.isEmpty{
+            _displayData.append(DisplayItem(Title: "行動電話", Value: StudentData.Phone.SmsPhone, OtherInfo: "phoneNumber", ColorAlarm: false))
+        }
+        
+        if !StudentData.Phone.PermanentPhone.isEmpty{
+            _displayData.append(DisplayItem(Title: "家用電話", Value: StudentData.Phone.PermanentPhone, OtherInfo: "phoneNumber", ColorAlarm: false))
+        }
+        
+        if !StudentData.Phone.ContactPhone.isEmpty{
+            _displayData.append(DisplayItem(Title: "聯絡電話", Value: StudentData.Phone.ContactPhone, OtherInfo: "phoneNumber", ColorAlarm: false))
+        }
+        
+        if let address = GetAddress(StudentData.Address.MailingAddress) where !address.isEmpty{
+           _displayData.append(DisplayItem(Title: "聯絡地址", Value: address, OtherInfo: "address", ColorAlarm: false))
+        }
+        
+        if let address = GetAddress(StudentData.Address.PermanentAddress) where !address.isEmpty{
+           _displayData.append(DisplayItem(Title: "住家地址", Value: address, OtherInfo: "address", ColorAlarm: false))
+        }
+        
+        if let address = GetAddress(StudentData.Address.OtherAddress) where !address.isEmpty{
+            _displayData.append(DisplayItem(Title: "其他地址", Value: address, OtherInfo: "address", ColorAlarm: false))
+        }
         
         var index = 1
         for email in GetEmails(StudentData.Emails){
-            _displayData.append(DisplayItem(Title: "電子郵件\(index)", Value: email, OtherInfo: "email", ColorAlarm: false))
-            index++
+            
+            if !email.isEmpty{
+                
+                _displayData.append(DisplayItem(Title: "電子郵件\(index)", Value: email, OtherInfo: "email", ColorAlarm: false))
+                
+                index++
+            }
         }
     }
     
     func SetOtherInfo(){
         
-        let school = StudentData.Department.isEmpty ? StudentData.SchoolName : StudentData.SchoolName + " " + StudentData.Department
-        _displayData.append(DisplayItem(Title: "學歷", Value: school, OtherInfo: "", ColorAlarm: false))
+        var 學歷 = [String]()
         
-        var index = 1
-        for company in StudentData.Companys{
-            _displayData.append(DisplayItem(Title: "工作經歷\(index) / 公司", Value: company.Name, OtherInfo: "", ColorAlarm: false))
-            _displayData.append(DisplayItem(Title: "工作經歷\(index) / 職稱", Value: company.Position, OtherInfo: "", ColorAlarm: false))
+        for school in StudentData.Schools{
             
-            index++
+            var text = school.Name
+            
+            text += school.Department.isEmpty ? "" : "/" + school.Department
+            
+            if !text.isEmpty{
+                學歷.append(text)
+            }
+        }
+        
+        if 學歷.count > 0{
+            _displayData.append(DisplayItem(Title: "學歷", Value: 學歷.joinWithSeparator("\n"), OtherInfo: "", ColorAlarm: false))
+        }
+        
+        var 經歷 = [String]()
+        
+        for company in StudentData.Companys{
+            
+            var text = company.Name
+            
+            text += company.Position.isEmpty ? "" : "/" + company.Position
+            
+            text += company.Status.isEmpty ? "" : "(" + company.Status + ")"
+            
+            if !text.isEmpty{
+                經歷.append(text)
+            }
+        }
+        
+        if 經歷.count > 0{
+            _displayData.append(DisplayItem(Title: "經歷", Value: 經歷.joinWithSeparator("\n"), OtherInfo: "", ColorAlarm: false))
         }
         
     }
@@ -157,13 +204,18 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
 //        StudentCoreData.SaveCatchData(StudentData)
 //    }
     
-    func GetAddress(xmlString:String) -> String{
-        var nserr : NSError?
-        let xml = AEXMLDocument(xmlData: xmlString.dataValue, error: &nserr)
+    func GetAddress(xmlString:String) -> String?{
+        
+        let xml: AEXMLDocument?
+        do {
+            xml = try AEXMLDocument(xmlData: xmlString.dataValue)
+        } catch _ {
+            xml = nil
+        }
         
         var retVal = ""
         
-        if let addresses = xml?.root["AddressList"]["Address"].all{
+        if let addresses = xml?.root["Address"].all{
             for address in addresses{
                 
                 let zipCode = address["ZipCode"].stringValue == "" ? "" : "[" + address["ZipCode"].stringValue + "]"
@@ -179,33 +231,37 @@ class StudentInfoViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataS
             }
         }
         
-        return "查無地址資料"
+        return nil
     }
     
     func GetEmails(xmlString:String) -> [String]{
         
         var retVal = [String]()
         
-        var nserr : NSError?
-        let xml = AEXMLDocument(xmlData: xmlString.dataValue, error: &nserr)
+        let xml: AEXMLDocument?
+        do {
+            xml = try AEXMLDocument(xmlData: xmlString.dataValue)
+        } catch _ {
+            xml = nil
+        }
         
-        if let email1 = xml?.root["email1"].stringValue{
+        if let email1 = xml?.root["email1"].stringValue where email1 != "element <email1> not found"{
             retVal.append(email1)
         }
         
-        if let email2 = xml?.root["email2"].stringValue{
+        if let email2 = xml?.root["email2"].stringValue where email2 != "element <email2> not found"{
             retVal.append(email2)
         }
         
-        if let email3 = xml?.root["email3"].stringValue{
+        if let email3 = xml?.root["email3"].stringValue where email3 != "element <email3> not found"{
             retVal.append(email3)
         }
         
-        if let email4 = xml?.root["email4"].stringValue{
+        if let email4 = xml?.root["email4"].stringValue where email4 != "element <email4> not found"{
             retVal.append(email4)
         }
         
-        if let email5 = xml?.root["email5"].stringValue{
+        if let email5 = xml?.root["email5"].stringValue where email5 != "element <email5> not found"{
             retVal.append(email5)
         }
         

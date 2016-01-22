@@ -80,10 +80,12 @@ class CourseTimeViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell{
         
-        var cell = tableView.dequeueReusableCellWithIdentifier("SectionItemCell") as? UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier("SectionItemCell")
         
         if cell == nil{
             cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "SectionItemCell")
+            cell?.textLabel?.font = UIFont.systemFontOfSize(16.0)
+            cell?.textLabel?.textColor = UIColor.darkGrayColor()
         }
         
         let title = PlacesAndTeachers[indexPath.section]
@@ -102,22 +104,23 @@ class CourseTimeViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         
         var retVal = [SectionItem]()
         
-        var con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect("test.emba.ntu.edu.tw")
         var err : DSFault!
         
-        var rsp = con.SendRequest("main.QuerySection", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)
+        let rsp = con.SendRequest("main.QuerySection", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)
         
         //println(rsp)
         
         if err != nil{
-            ShowErrorAlert(self,"查詢發生錯誤",err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
             return retVal
         }
         
-        var nserr:NSError?
-        var xml = AEXMLDocument(xmlData: rsp.dataValue, error: &nserr)
-        
-        if nserr != nil{
+        var xml: AEXMLDocument?
+        do {
+            xml = try AEXMLDocument(xmlData: rsp.dataValue)
+        } catch _ {
+            xml = nil
             return retVal
         }
         
@@ -133,13 +136,13 @@ class CourseTimeViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
                 let startDateTime = _DateParser.dateFromString(starttime)
                 let endDateTime = _DateParser.dateFromString(endtime)
                 
-                var si = SectionItem(Starttime: startDateTime!, Endtime: endDateTime!, Place: place, TeacherName: teacherName)
+                let si = SectionItem(Starttime: startDateTime!, Endtime: endDateTime!, Place: place, TeacherName: teacherName)
                 
                 retVal.append(si)
             }
         }
         
-        retVal.sort({ $0.Starttime < $1.Starttime })
+        retVal.sortInPlace({ $0.Starttime < $1.Starttime })
         
         return retVal
 
@@ -160,7 +163,7 @@ class CourseTimeViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
     
     func GetWeekDay(date:NSDate) -> String{
         
-        let myWeekday = NSCalendar.currentCalendar().components(NSCalendarUnit.CalendarUnitWeekday, fromDate: date).weekday
+        let myWeekday = NSCalendar.currentCalendar().components(NSCalendarUnit.Weekday, fromDate: date).weekday
         
         switch myWeekday{
         case 1:

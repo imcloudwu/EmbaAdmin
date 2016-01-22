@@ -45,16 +45,30 @@ class SideMenuViewCtrl: UIViewController{
     
     @IBAction func Btn1(sender: AnyObject) {
         
-        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("StudentQuery") as! UIViewController
+        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("StudentQuery")
         
-        ChangeContentView(nextView)
+        ChangeContentView(nextView!)
     }
     
     @IBAction func Btn2(sender: AnyObject) {
         
-        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("CourseQuery") as! UIViewController
+        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("CourseQuery")
         
-        ChangeContentView(nextView)
+        ChangeContentView(nextView!)
+    }
+    
+    @IBAction func ClassBtnClick(sender: AnyObject) {
+        
+        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("ClassQuery")
+        
+        ChangeContentView(nextView!)
+    }
+    
+    @IBAction func TeacherBtnClick(sender: AnyObject) {
+        
+        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("TeacherQuery")
+        
+        ChangeContentView(nextView!)
     }
     
     @IBAction func Btn3(sender: AnyObject) {
@@ -83,7 +97,7 @@ class SideMenuViewCtrl: UIViewController{
         MessageCoreData.DeleteAll()
         
         var storage : NSHTTPCookieStorage = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        for cookie in storage.cookies as! [NSHTTPCookie]
+        for cookie in storage.cookies!
         {
             storage.deleteCookie(cookie)
         }

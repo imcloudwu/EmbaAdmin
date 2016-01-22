@@ -19,9 +19,6 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
     
     var progressTimer: ProgressTimer!
     
-    let Literature = UIImage(named: "Literature-50.png")
-    let Geometry = UIImage(named: "Geometry-50.png")
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -41,11 +38,15 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
     
     override func viewDidAppear(animated: Bool) {
         
+        if self._Datas.count > 0{
+            return
+        }
+        
         progressTimer.StartProgress()
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
             
-            var data = self.GetCourseData()
+            let data = self.GetCourseData()
             
             dispatch_async(dispatch_get_main_queue(), {
                 
@@ -66,19 +67,26 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
     
     func GetCourseData() -> [CourseInfoItem]{
         
+        var mergeData = [String:CourseInfoItem]()
+        
         var retVal = [CourseInfoItem]()
         
-        var con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect("test.emba.ntu.edu.tw")
         var err : DSFault!
         
-        var rsp = con.SendRequest("main.QueryCourseInfo", bodyContent: "", &err)
+        let rsp = con.SendRequest("main.QueryCourseInfo", bodyContent: "", &err)
         
         if err != nil{
-            ShowErrorAlert(self,"查詢發生錯誤",err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            return retVal
         }
         
-        var nserr:NSError?
-        var xml = AEXMLDocument(xmlData: rsp.dataValue, error: &nserr)
+        var xml: AEXMLDocument?
+        do {
+            xml = try AEXMLDocument(xmlData: rsp.dataValue)
+        } catch _ {
+            xml = nil
+        }
         
         if let courses = xml?.root["Response"]["Course"].all{
             
@@ -93,10 +101,11 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
                 let SubjectCode = course["SubjectCode"].stringValue
                 let SubjectName = course["SubjectName"].stringValue
                 let CourseCount = course["CourseCount"].stringValue
+                let Syllabus = course["Syllabus"].stringValue
                 
                 var Credit = 0
                 
-                if let credit = course["Credit"].stringValue.toInt(){
+                if let credit = Int(course["Credit"].stringValue){
                     Credit = credit
                 }
                 
@@ -118,21 +127,28 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
                     }
                 }
                 
-                var sysm = SemesterItem(SchoolYear: SchoolYear,Semester: Semester)
+                let sysm = SemesterItem(SchoolYear: SchoolYear,Semester: Semester)
                 
-                var course = CourseInfoItem(CourseID: CourseID, CourseName: CourseName, Credit: Credit, CourseType: CourseType, DeptName: DeptName, SubjectCode: SubjectCode, SubjectName: SubjectName, Teachers: Teachers, Assistants : Assistants, Semester: sysm,StudentCount : CourseCount.intValue)
+                let course = CourseInfoItem(CourseID: CourseID, CourseName: CourseName, Credit: Credit, CourseType: CourseType, DeptName: DeptName, SubjectCode: SubjectCode, SubjectName: SubjectName, Teachers: Teachers, Assistants : Assistants, Semester: sysm,StudentCount : CourseCount.intValue, Syllabus : Syllabus)
                 
-                retVal.append(course)
+                if let _ = mergeData[course.CourseID]{
+                    mergeData[course.CourseID]!.Teachers += course.Teachers
+                    mergeData[course.CourseID]!.Assistants += course.Assistants
+                }
+                else{
+                    mergeData[course.CourseID] = course
+                }
+                
             }
         }
         
-        retVal.sort({$0.Semester > $1.Semester})
+        retVal += mergeData.values
         
-        return retVal
+        return retVal.sort({$0.Semester > $1.Semester})
     }
     
     func ToggleSideMenu(){
-        var app = UIApplication.sharedApplication().delegate as! AppDelegate
+        let app = UIApplication.sharedApplication().delegate as! AppDelegate
         
         app.centerContainer?.toggleDrawerSide(MMDrawerSide.Left, animated: true, completion: nil)
     }
@@ -145,14 +161,19 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         
         let data = self._DisplayData[indexPath.row]
         
-        var cell = tableView.dequeueReusableCellWithIdentifier("CourseInfoCell") as! CourseInfoCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("CourseInfoCell") as! CourseInfoCell
         
         cell.CourseName.text = data.CourseName
-        cell.SubjectCode.text = "課號: \(data.SubjectCode)"
-        cell.CourseType.text = "類別: \(data.CourseType)"
-        cell.CourseTeacher.text = "教師: " + ",".join(data.Teachers)
         
-        cell.Icon.image = data.CourseType == "核心必修" ? Geometry : Literature
+        let subjectCode = data.SubjectCode
+        
+        let subjectType = data.CourseType.isEmpty ? data.CourseType : " / " + data.CourseType
+        let subjectCredit = " / \(data.Credit) 學分"
+        
+        cell.SubjectCode.text = subjectCode + subjectType + subjectCredit
+        
+        cell.CourseType.text = data.DeptName
+        cell.CourseTeacher.text = data.Teachers.joinWithSeparator(",")
         
         cell.StudentCount.text = "人數\n\(data.StudentCount)"
         
@@ -177,12 +198,12 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         searchBar.resignFirstResponder()
         self.view.endEditing(true)
         
-        Search(searchBar.text)
+        Search(searchBar.text!)
     }
     
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        Search(searchText)
-    }
+//    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+//        Search(searchText)
+//    }
     
     func Search(searchText:String){
         
@@ -220,38 +241,34 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         
         let founds = sources.filter({ course in
             
-            if let a = course.CourseName.lowercaseString.rangeOfString(text.lowercaseString){
+            if let _ = course.CourseName.lowercaseString.rangeOfString(text.lowercaseString){
                 return true
             }
             
-            if let b = course.SubjectCode.lowercaseString.rangeOfString(text.lowercaseString){
+            if let _ = course.CourseType.lowercaseString.rangeOfString(text.lowercaseString){
+                return true
+            }
+            
+            if let _ = course.DeptName.lowercaseString.rangeOfString(text.lowercaseString){
+                return true
+            }
+            
+            if let _ = course.SubjectCode.lowercaseString.rangeOfString(text.lowercaseString){
                 return true
             }
             
             if course.Teachers.count > 0{
                 
-                if let c = course.Teachers[0].lowercaseString.rangeOfString(text.lowercaseString){
+                if let _ = course.Teachers[0].lowercaseString.rangeOfString(text.lowercaseString){
                     return true
                 }
             }
             
-            if let d = course.Semester.SchoolYear.lowercaseString.rangeOfString(text.lowercaseString){
+            if let _ = course.Semester.SchoolYear.lowercaseString.rangeOfString(text.lowercaseString){
                 return true
             }
             
             return course.Semester.Semester == CovertSemesterText(text)
-            
-//            switch text{
-//                
-//                case "上":
-//                    return course.Semester.Semester == self.CovertSemesterText(text)
-//                case "下":
-//                    return course.Semester.Semester == self.CovertSemesterText(text)
-//                case "夏":
-//                    return course.Semester.Semester == self.CovertSemesterText(text)
-//                default:
-//                    return false
-//            }
             
         })
         
@@ -260,7 +277,7 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
     
 }
 
-struct CourseInfoItem{
+struct CourseInfoItem {
     var CourseID:String
     var CourseName:String
     var Credit:Int
@@ -272,4 +289,5 @@ struct CourseInfoItem{
     var Assistants:[String]
     var Semester:SemesterItem
     var StudentCount : Int
+    var Syllabus : String
 }

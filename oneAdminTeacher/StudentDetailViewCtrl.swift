@@ -11,9 +11,9 @@ import UIKit
 class StudentDetailViewCtrl: UIViewController {
     
     @IBOutlet weak var SubTitleView: UIView!
-    @IBOutlet weak var SubTitle1: UILabel!
-    @IBOutlet weak var SubTitle2: UILabel!
-    @IBOutlet weak var SubTitle3: UILabel!
+    
+    @IBOutlet weak var SubInfo1: UILabel!
+    @IBOutlet weak var SubInfo2: UILabel!
     
     @IBOutlet weak var Height: NSLayoutConstraint!
     @IBOutlet weak var EmbedView: UIView!
@@ -38,10 +38,10 @@ class StudentDetailViewCtrl: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var pics = ["background.png","background5.png"]
-        let randomIndex = Int(arc4random_uniform(2))
+//        var pics = ["background.png","background5.png"]
+//        let randomIndex = Int(arc4random_uniform(2))
         
-        var background = UIImageView(image: UIImage(named: pics[randomIndex]))
+        let background = UIImageView(image: UIImage(named: "背景圖片.jpg"))
         background.frame = SubTitleView.bounds
         //nback.contentMode = UIViewContentMode.ScaleAspectFill
         SubTitleView.insertSubview(background, atIndex: 0)
@@ -62,7 +62,7 @@ class StudentDetailViewCtrl: UIViewController {
         PhotoImage.layer.borderWidth = 3.0
         PhotoImage.layer.borderColor = UIColor.whiteColor().CGColor
         
-        var tap = UITapGestureRecognizer(target: self, action: "DisplayPhoto")
+        let tap = UITapGestureRecognizer(target: self, action: "DisplayPhoto")
         PhotoImage.addGestureRecognizer(tap)
         
         if !IsClassStudent{
@@ -74,9 +74,28 @@ class StudentDetailViewCtrl: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
-        SubTitle1.text = StudentData.Name + "/" + StudentData.EnglishName
-        SubTitle2.text = StudentData.Companys[0].Name
-        SubTitle3.text = StudentData.Companys[0].Position
+        
+        SubInfo1.text = StudentData.Name + "\n\n" + StudentData.ClassName + "\n\n" + StudentData.GroupDepartment
+        
+        var subInfo2 = ""
+        
+        for company in StudentData.Companys{
+            
+            if company.Status == "現職"{
+                subInfo2 += company.Name + "\n\n"
+                subInfo2 += company.Position + "\n\n"
+                break
+            }
+        }
+        
+        if subInfo2.isEmpty && StudentData.Companys.count > 0{
+            subInfo2 += StudentData.Companys[0].Name + "\n\n"
+            subInfo2 += StudentData.Companys[0].Position + "\n\n"
+        }
+        
+        subInfo2 += StudentData.StudentNumber.isEmpty ? "" : "學號 : " + StudentData.StudentNumber
+        
+        SubInfo2.text = subInfo2
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -167,7 +186,7 @@ class StudentDetailViewCtrl: UIViewController {
         
         //newController.didMoveToParentViewController(self)
         
-        for sub in EmbedView.subviews as! [UIView]{
+        for sub in EmbedView.subviews {
             sub.removeFromSuperview()
         }
         

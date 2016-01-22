@@ -38,7 +38,7 @@ class CourseCaseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         Datas = GetData()
         
         if Datas.count == 0{
-            Datas.append(CaseItem(TeacherName: "查無使用案例", EnglishCaseName: "", ChineseCaseName: ""))
+            Datas.append(CaseItem(TeacherName: "查無使用個案", EnglishCaseName: "", ChineseCaseName: ""))
         }
         
         tableView.reloadData()
@@ -52,16 +52,18 @@ class CourseCaseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         
         let data = Datas[indexPath.row]
         
-        var cell = tableView.dequeueReusableCellWithIdentifier("CourseCaseCell") as? UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier("CourseCaseCell")
         
         if cell == nil{
             cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "CourseCaseCell")
+            cell?.textLabel?.font = UIFont.systemFontOfSize(16.0)
+            cell?.textLabel?.textColor = UIColor.darkGrayColor()
             cell?.textLabel?.numberOfLines = 0
         }
         
         var text = data.ChineseCaseName.isEmpty ? data.EnglishCaseName : data.ChineseCaseName
         
-        text += data.TeacherName
+        text += data.TeacherName == "查無使用個案" ? data.TeacherName : " / " + data.TeacherName
         
         cell?.textLabel?.text = text
         
@@ -72,20 +74,21 @@ class CourseCaseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         
         var retVal = [CaseItem]()
         
-        var con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect("test.emba.ntu.edu.tw")
         var err : DSFault!
         
-        var rsp = con.SendRequest("main.QueryCaseUsage", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)
+        let rsp = con.SendRequest("main.QueryCaseUsage", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self,"查詢發生錯誤",err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
             return retVal
         }
         
-        var nserr:NSError?
-        var xml = AEXMLDocument(xmlData: rsp.dataValue, error: &nserr)
-        
-        if nserr != nil{
+        var xml: AEXMLDocument?
+        do {
+            xml = try AEXMLDocument(xmlData: rsp.dataValue)
+        } catch _ {
+            xml = nil
             return retVal
         }
         
@@ -96,7 +99,7 @@ class CourseCaseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
                 let chinese_CaseName = c["Chinese_CaseName"].stringValue
                 let english_CaseName = c["English_CaseName"].stringValue
                 
-                var ci = CaseItem(TeacherName: " / " + teacher_Name, EnglishCaseName: english_CaseName, ChineseCaseName: chinese_CaseName)
+                let ci = CaseItem(TeacherName: teacher_Name, EnglishCaseName: english_CaseName, ChineseCaseName: chinese_CaseName)
                 
                 retVal.append(ci)
             }

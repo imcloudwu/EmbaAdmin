@@ -90,7 +90,7 @@ struct SemesterItem : Equatable,Comparable{
     }
     
     var CompareValue : Int{
-        if let sy = SchoolYear.toInt() , let sm = Semester.toInt(){
+        if let sy = Int(SchoolYear) , let sm = Int(Semester){
             return sy * 10 + sm
         }
         else{

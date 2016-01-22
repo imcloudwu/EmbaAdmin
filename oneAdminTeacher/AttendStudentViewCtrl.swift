@@ -16,6 +16,8 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
     
     var Students : [EmbaStudent]!
     
+    let _LightGrayColor = UIColor(red: 170/255.0, green: 170/255.0, blue: 170/255.0, alpha: 0.2)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,49 +41,81 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         
         let student = Students[indexPath.row]
         
-        var cell = tableView.dequeueReusableCellWithIdentifier("AttendStudentCell") as? UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier("AttendStudentCell")
         
         if cell == nil{
             cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "AttendStudentCell")
         }
         
-        cell?.textLabel?.text = student.StudentNumber + "   \(student.Gender)   " + student.ClassName + "       \(student.Name)"
+        if student.Id.isEmpty{
+            cell?.backgroundColor = _LightGrayColor
+            cell?.textLabel?.textColor = UIColor.blackColor()
+            cell?.textLabel?.font = UIFont.boldSystemFontOfSize(16.0)
+            cell?.textLabel?.text = student.ClassName
+        }
+        else{
+            
+            var text = student.StudentNumber.isEmpty ? "(查無學號)" : student.StudentNumber
+            text += student.Name.isEmpty ? "  /  (查無姓名)" : "  /  " + student.Name
+            text += student.Gender.isEmpty ? "  /  (查無姓別)" : "  /  " + student.Gender
+            
+            cell?.backgroundColor = UIColor.whiteColor()
+            cell?.textLabel?.textColor = UIColor.darkGrayColor()
+            cell?.textLabel?.font = UIFont.systemFontOfSize(16.0)
+            cell?.textLabel?.text = text
+        }
         
         return  cell!
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?{
-        return "修課學生數: \(Students.count)"
+        
+        var count = 0
+        
+        for s in Students{
+            if !s.Id.isEmpty{
+                count++
+            }
+        }
+        
+        return "修課學生數: \(count)"
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
         
         let student = Students[indexPath.row]
         
-        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("StudentDetailViewCtrl") as! StudentDetailViewCtrl
-        
-        nextView.StudentData = self.GetStudentDetailData(student.Id)
-        
-        self.navigationController?.pushViewController(nextView, animated: true)
+        if !student.Id.isEmpty{
+            
+            let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("StudentDetailViewCtrl") as! StudentDetailViewCtrl
+            
+            nextView.StudentData = self.GetStudentDetailData(student.Id)
+            
+            self.navigationController?.pushViewController(nextView, animated: true)
+        }
     }
     
     func GetAttendStudents() -> [EmbaStudent]{
         
         var retVal = [EmbaStudent]()
         
-        var con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect("test.emba.ntu.edu.tw")
         var err : DSFault!
         
-        var rsp = con.SendRequest("main.QueryCourseStudent", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)
-        
-        //println(rsp)
+        let rsp = con.SendRequest("main.QueryCourseStudent", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self,"查詢發生錯誤",err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
         }
         
-        var nserr:NSError?
-        var xml = AEXMLDocument(xmlData: rsp.dataValue, error: &nserr)
+        var xml: AEXMLDocument?
+        do {
+            xml = try AEXMLDocument(xmlData: rsp.dataValue)
+        } catch _ {
+            xml = nil
+        }
+        
+        var tmpCollection = [EmbaStudent]()
         
         if let students = xml?.root["Response"]["ScattendExt"].all{
             for student in students{
@@ -92,37 +126,67 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
                 let gender = student["Gender"].stringValue
                 let className = student["ClassName"].stringValue
                 
-                let es = EmbaStudent(Id: refStudentId, Name: studentName, EnglishName: "", ClassName: className, Birthdate: "", BirthPlace: "", StudentNumber: studentNumber, IdNumber: "", Gender: gender, EnrollYear: "", SchoolName: "", Department: "", Emails: "", Photo: nil, Companys: [Company](), Phone: nil, Address: nil)
+                let es = EmbaStudent(Id: refStudentId, Name: studentName, EnglishName: "", ClassName: className, Birthdate: "", BirthPlace: "", StudentNumber: studentNumber, IdNumber: "", Gender: gender, EnrollYear: "", Schools: [SchoolItem](), Department: "", GroupDepartment: "", Emails: "", Photo: nil, Companys: [Company](), Phone: nil, Address: nil)
                 
-                retVal.append(es)
+                tmpCollection.append(es)
             }
         }
         
-        retVal.sort({$0.ClassName < $1.ClassName})
+        var filter = [String:[EmbaStudent]]()
+        
+        var keys = [String]()
+        
+        for t in tmpCollection.sort({ $0.ClassName < $1.ClassName}){
+            
+            if filter[t.ClassName] == nil{
+                keys.append(t.ClassName)
+                filter[t.ClassName] = [EmbaStudent]()
+            }
+            
+            filter[t.ClassName]?.append(t)
+        }
+        
+        for k in keys{
+            
+            if let students = filter[k]{
+                
+                let header = EmbaStudent(Id: "", Name: "", EnglishName: "", ClassName: k, Birthdate: "", BirthPlace: "", StudentNumber: "", IdNumber: "", Gender: "", EnrollYear: "", Schools: [SchoolItem](), Department: "", GroupDepartment: "", Emails: "", Photo: nil, Companys: [Company](), Phone: nil, Address: nil)
+                
+                retVal.append(header)
+                
+                for student in students{
+                    retVal.append(student)
+                }
+            }
+        }
         
         return retVal
-        
     }
     
     func GetStudentDetailData(value:String) -> EmbaStudent?{
         
         var retVal : EmbaStudent?
         
-        var con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect("test.emba.ntu.edu.tw")
         var err : DSFault!
         
-        var rsp = con.sendRequestWithXmlType("main.QueryStudent", bodyContent: "<Request><Condition><StudentID>\(value)</StudentID></Condition></Request>", &err)
+//        var rsp = con.sendRequestWithXmlType("main.QueryStudent", bodyContent: "<Request><Condition><StudentID>\(value)</StudentID></Condition></Request>", &err)
+        
+        let rsp = con.SendRequest("main.QueryStudent", bodyContent: "<Request><Condition><StudentID>\(value)</StudentID></Condition></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self,"查詢發生錯誤",err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
         }
-        var xml = AEXMLDocument(root: rsp)
         
-        if let students = xml.root["Response"]["Student"].all {
+        //var xml = AEXMLDocument(root: rsp)
+        
+        let xml = try? AEXMLDocument(xmlData: rsp.dataValue)
+        
+        if let students = xml?.root["Response"]["Student"].all {
             for student in students{
                 let name = student["Name"].stringValue
                 let className = student["ClassName"].stringValue
-                let freshmanPhoto = GetImageFromBase64String(student["FreshmanPhoto"].stringValue, UIImage(named: "User-100.png"))
+                let freshmanPhoto = GetImageFromBase64String(student["FreshmanPhoto"].stringValue, defaultImg: UIImage(named: "User-100.png"))
                 
                 let id = student["Id"].stringValue
                 let englishName = student["EnglishName"].stringValue
@@ -134,6 +198,7 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
                 let enrollYear = student["EnrollYear"].stringValue
                 let schoolName = student["SchoolName"].stringValue
                 let department = student["Department"].stringValue
+                let groupDepartment = student["GroupDepartment"].stringValue
                 
                 let emails = student["EmailList"].xmlString
                 
@@ -141,17 +206,30 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
                 
                 let addressData = AddressData(MailingAddress: student["MailingAddress"].xmlString, PermanentAddress: student["PermanentAddress"].xmlString, OtherAddress: student["OtherAddress"].xmlString)
                 
-                let company = Company(Name: student["CompanyName"].stringValue, Position: student["Position"].stringValue)
+                let company = Company(Name: student["CompanyName"].stringValue, Position: student["Position"].stringValue, Status : student["work_status"].stringValue)
+                
+                let school = SchoolItem(Name: schoolName, Department: department)
                 
                 if retVal == nil{
                     
                     var companys = [Company]()
                     companys.append(company)
                     
-                    retVal = EmbaStudent(Id: id, Name: name, EnglishName: englishName, ClassName: className, Birthdate: birthdate, BirthPlace: birthPlace, StudentNumber: studentNumber, IdNumber: idNumber, Gender: gender, EnrollYear: enrollYear, SchoolName: schoolName, Department: department,  Emails: emails, Photo: freshmanPhoto, Companys: companys, Phone: phoneData, Address: addressData)
+                    var schools = [SchoolItem]()
+                    schools.append(school)
+                    
+                    retVal = EmbaStudent(Id: id, Name: name, EnglishName: englishName, ClassName: className, Birthdate: birthdate, BirthPlace: birthPlace, StudentNumber: studentNumber, IdNumber: idNumber, Gender: gender, EnrollYear: enrollYear, Schools: schools, Department: department, GroupDepartment: groupDepartment, Emails: emails, Photo: freshmanPhoto, Companys: companys, Phone: phoneData, Address: addressData)
                 }
                 else{
-                    retVal?.Companys.append(company)
+                    
+                    if !retVal!.Companys.contains(company){
+                        retVal?.Companys.append(company)
+                    }
+                    
+                    if !retVal!.Schools.contains(school){
+                        retVal?.Schools.append(school)
+                    }
+                    
                 }
                 
             }
