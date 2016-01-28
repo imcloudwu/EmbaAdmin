@@ -12,6 +12,7 @@ import UIKit
 public class Global{
 //    static var clientID = "b2528ab72e010d32fc751a6c68bb08f6"
 //    static var clientSecret = "6d530c6bcb880a64064305b6020849ca94e1ee926df193b2aa3d0991014c2579"
+    static var DSAName = "emba.ntu.edu.tw"
     static var clientID = "e6749f37f33854a93add581aed864491"
     static var clientSecret = "58050439d93035e9d13e6681b946c2bb213bd34296e76d2c9ad59f7b8e17c53d"
     static var ContractName = "emba.admin"

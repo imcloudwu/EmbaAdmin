@@ -14,10 +14,58 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    @IBOutlet weak var schoolYearBtn: UIButton!
+    
     var _Datas = [CourseInfoItem]()
     var _DisplayData = [CourseInfoItem]()
     
+    var _CurrentSemester : SemesterItem!
+    var _SelectedSemester : SemesterItem!
+    
     var progressTimer: ProgressTimer!
+    
+    @IBAction func schoolYearBtnClick(sender: AnyObject) {
+        
+        let current_sy = self._CurrentSemester.SchoolYear.intValue
+        
+        let min = current_sy - 4
+        
+        let max = current_sy + 1
+        
+        //action1
+        let sy_menu = UIAlertController(title: "請選擇學年度", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        sy_menu.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
+        
+        for sy in min...max{
+            
+            sy_menu.addAction(UIAlertAction(title: "\(sy)", style: UIAlertActionStyle.Default, handler: { (act1) -> Void in
+                
+                //action2
+                
+                let sm_menu = UIAlertController(title: "請選擇學期", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+                
+                sm_menu.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
+                
+                for sm in 0...2{
+                    
+                    sm_menu.addAction(UIAlertAction(title: CovertSemesterText("\(sm)"), style: UIAlertActionStyle.Default, handler: { (act1) -> Void in
+                        
+                        self._SelectedSemester = SemesterItem(SchoolYear:"\(sy)",Semester:"\(sm)")
+                        
+                        self.schoolYearBtn.setTitle(self._SelectedSemester.Description, forState: UIControlState.Normal)
+                        
+                        self.StartToGetCourseData()
+                    }))
+                }
+                
+                self.presentViewController(sm_menu, animated: true, completion: nil)
+                
+            }))
+        }
+        
+        self.presentViewController(sy_menu, animated: true, completion: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +86,36 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
     
     override func viewDidAppear(animated: Bool) {
         
-        if self._Datas.count > 0{
+        if _CurrentSemester != nil{
             return
         }
+        
+        progressTimer.StartProgress()
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
+            
+            let sysm = self.GetCurrentSchoolYear()
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                self._CurrentSemester = sysm
+                self._SelectedSemester = sysm
+                
+                self.schoolYearBtn.setTitle(self._SelectedSemester.Description, forState: UIControlState.Normal)
+                
+                self.progressTimer.StopProgress()
+                
+                self.StartToGetCourseData()
+            })
+        })
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func StartToGetCourseData(){
         
         progressTimer.StartProgress()
         
@@ -60,9 +135,31 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         })
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func GetCurrentSchoolYear() -> SemesterItem{
+        
+        var retVal = SemesterItem(SchoolYear:"100",Semester:"0")
+        
+        let con = GetCommonConnect(Global.DSAName)
+        var err : DSFault!
+        
+        let rsp = con.SendRequest("main.GetSemester", bodyContent: "", &err)
+        
+        if err != nil{
+            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            return retVal
+        }
+        
+        let xml = try? AEXMLDocument(xmlData: rsp.dataValue)
+        
+        if let schoolYear = xml?.root["Response"]["SystemConfig"]["DefaultSchoolYear"].value{
+            retVal.SchoolYear = schoolYear
+        }
+        
+        if let semester = xml?.root["Response"]["SystemConfig"]["DefaultSemester"].value{
+            retVal.Semester = semester
+        }
+        
+        return retVal
     }
     
     func GetCourseData() -> [CourseInfoItem]{
@@ -71,10 +168,10 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         
         var retVal = [CourseInfoItem]()
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
-        let rsp = con.SendRequest("main.QueryCourseInfo", bodyContent: "", &err)
+        let rsp = con.SendRequest("main.QueryCourseInfo", bodyContent: "<Request><Condition><SchoolYear>\(self._SelectedSemester.SchoolYear)</SchoolYear><Semester>\(self._SelectedSemester.Semester)</Semester></Condition></Request>", &err)
         
         if err != nil{
             ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
@@ -201,9 +298,9 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         Search(searchBar.text!)
     }
     
-//    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-//        Search(searchText)
-//    }
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        Search(searchText)
+    }
     
     func Search(searchText:String){
         
@@ -212,23 +309,53 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         }
         else{
             
-            var searchTexts = searchText.componentsSeparatedByString(" ")
-            
-            //First search : searchTexts[0] should has value
-            var results = GetSearchResult(self._Datas, text: searchTexts[0])
-            
-            //Second search
-            for text in searchTexts{
+            let founds = self._Datas.filter({ (course) -> Bool in
                 
-                if text == searchTexts.first || text.isEmpty{
-                    continue
+                let text = searchText.lowercaseString
+                
+                if let _ = course.CourseName.lowercaseString.rangeOfString(text){
+                    return true
                 }
                 
-                results = GetSearchResult(results, text: text)
-
-            }
+                if let _ = course.CourseType.lowercaseString.rangeOfString(text){
+                    return true
+                }
+                
+                if let _ = course.DeptName.lowercaseString.rangeOfString(text){
+                    return true
+                }
+                
+                if let _ = course.SubjectCode.lowercaseString.rangeOfString(text){
+                    return true
+                }
+                
+                if course.Teachers.count > 0{
+                    
+                    if let _ = course.Teachers[0].lowercaseString.rangeOfString(text){
+                        return true
+                    }
+                }
+                
+                return false
+            })
             
-            self._DisplayData = results
+//            var searchTexts = searchText.componentsSeparatedByString(" ")
+//            
+//            //First search : searchTexts[0] should has value
+//            var results = GetSearchResult(self._Datas, text: searchTexts[0])
+//            
+//            //Second search
+//            for text in searchTexts{
+//                
+//                if text == searchTexts.first || text.isEmpty{
+//                    continue
+//                }
+//                
+//                results = GetSearchResult(results, text: text)
+//
+//            }
+            
+            self._DisplayData = founds
         }
         
         self.tableView.contentOffset = CGPointMake(0, 0 - self.tableView.contentInset.top)
@@ -237,43 +364,43 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         
     }
     
-    func GetSearchResult(sources:[CourseInfoItem],text:String) -> [CourseInfoItem]{
-        
-        let founds = sources.filter({ course in
-            
-            if let _ = course.CourseName.lowercaseString.rangeOfString(text.lowercaseString){
-                return true
-            }
-            
-            if let _ = course.CourseType.lowercaseString.rangeOfString(text.lowercaseString){
-                return true
-            }
-            
-            if let _ = course.DeptName.lowercaseString.rangeOfString(text.lowercaseString){
-                return true
-            }
-            
-            if let _ = course.SubjectCode.lowercaseString.rangeOfString(text.lowercaseString){
-                return true
-            }
-            
-            if course.Teachers.count > 0{
-                
-                if let _ = course.Teachers[0].lowercaseString.rangeOfString(text.lowercaseString){
-                    return true
-                }
-            }
-            
-            if let _ = course.Semester.SchoolYear.lowercaseString.rangeOfString(text.lowercaseString){
-                return true
-            }
-            
-            return course.Semester.Semester == CovertSemesterText(text)
-            
-        })
-        
-        return founds
-    }
+//    func GetSearchResult(sources:[CourseInfoItem],text:String) -> [CourseInfoItem]{
+//        
+//        let founds = sources.filter({ course in
+//            
+//            if let _ = course.CourseName.lowercaseString.rangeOfString(text.lowercaseString){
+//                return true
+//            }
+//            
+//            if let _ = course.CourseType.lowercaseString.rangeOfString(text.lowercaseString){
+//                return true
+//            }
+//            
+//            if let _ = course.DeptName.lowercaseString.rangeOfString(text.lowercaseString){
+//                return true
+//            }
+//            
+//            if let _ = course.SubjectCode.lowercaseString.rangeOfString(text.lowercaseString){
+//                return true
+//            }
+//            
+//            if course.Teachers.count > 0{
+//                
+//                if let _ = course.Teachers[0].lowercaseString.rangeOfString(text.lowercaseString){
+//                    return true
+//                }
+//            }
+//            
+//            if let _ = course.Semester.SchoolYear.lowercaseString.rangeOfString(text.lowercaseString){
+//                return true
+//            }
+//            
+//            return course.Semester.Semester == CovertSemesterText(text)
+//            
+//        })
+//        
+//        return founds
+//    }
     
 }
 

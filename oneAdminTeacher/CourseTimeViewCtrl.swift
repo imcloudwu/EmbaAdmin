@@ -104,7 +104,7 @@ class CourseTimeViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         
         var retVal = [SectionItem]()
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
         let rsp = con.SendRequest("main.QuerySection", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)

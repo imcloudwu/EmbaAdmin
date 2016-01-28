@@ -18,6 +18,8 @@ class CourseWebViewCtrl: UIViewController,UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tint.text = "查無資料"
+        
         webView.delegate = self
         
         //載入登入頁面

@@ -142,7 +142,7 @@ class EmbaCourseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         
         var retVal = [CourseScoreItem]()
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
         let rsp = con.SendRequest("main.QueryStudentScore", bodyContent: "<Request><Condition><Or><StudentID>\(StudentData.Id)</StudentID></Or></Condition></Request>", &err)

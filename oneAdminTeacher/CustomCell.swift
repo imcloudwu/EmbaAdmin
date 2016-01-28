@@ -8,6 +8,15 @@
 
 import UIKit
 
+class EmbaTeacherInfoCell : UITableViewCell{
+    
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var detailLabel: UILabel!
+    
+    override func awakeFromNib() {
+    }
+}
+
 class EmbaTeacherCell : UITableViewCell{
     
     @IBOutlet weak var Tag1: UILabel!

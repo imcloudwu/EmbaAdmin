@@ -99,7 +99,7 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         
         var retVal = [EmbaStudent]()
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
         let rsp = con.SendRequest("main.QueryCourseStudent", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)
@@ -167,7 +167,7 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         
         var retVal : EmbaStudent?
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
 //        var rsp = con.sendRequestWithXmlType("main.QueryStudent", bodyContent: "<Request><Condition><StudentID>\(value)</StudentID></Condition></Request>", &err)

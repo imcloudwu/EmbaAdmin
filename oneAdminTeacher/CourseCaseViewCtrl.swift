@@ -14,6 +14,8 @@ class CourseCaseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
     
     var CourseInfoItemData : CourseInfoItem!
     
+    var TeacherData : EmbaTeacher!
+    
     var Datas = [CaseItem]()
     
     override func viewDidLoad() {
@@ -74,10 +76,19 @@ class CourseCaseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         
         var retVal = [CaseItem]()
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
-        let rsp = con.SendRequest("main.QueryCaseUsage", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)
+        var body = ""
+        
+        if TeacherData != nil{
+            body = "<Request><Condition><RefTeacherID>\(TeacherData.Id)</RefTeacherID></Condition></Request>"
+        }
+        else{
+            body = "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>"
+        }
+        
+        let rsp = con.SendRequest("main.QueryCaseUsage", bodyContent: body, &err)
         
         if err != nil{
             ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)

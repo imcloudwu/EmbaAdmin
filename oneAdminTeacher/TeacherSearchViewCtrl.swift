@@ -68,8 +68,6 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "教師資料"
-        
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Menu-24.png"), style: UIBarButtonItemStyle.Plain, target: self, action: "ToggleSideMenu")
         
         searchBar.delegate = self
@@ -89,7 +87,15 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewWillAppear(animated: Bool) {
+        self.navigationItem.title = "教師資料"
+    }
+    
     override func viewDidAppear(animated: Bool) {
+        
+        if self._TagDic.count > 0{
+            return
+        }
         
         progressTimer.StartProgress()
         
@@ -159,7 +165,7 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         
         var mergeData = [String:[Tag]]()
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
         let rsp = con.SendRequest("main.QueryTeacherTAG", bodyContent: "", &err)
@@ -198,7 +204,7 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
     
     func GetTeacherDataByTag() -> [EmbaTeacher]{
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
         let rsp = con.SendRequest("main.QueryTeacher", bodyContent: "<Request><Condition><Ref_Tag_id>\(_CurrentTag.Id)</Ref_Tag_id></Condition></Request>", &err)
@@ -213,7 +219,7 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
     
     func GetTeacherDataByValues(value:String) -> [EmbaTeacher]{
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
         let rsp = con.SendRequest("main.QueryTeacher", bodyContent: "<Request><Condition><Or><TeacherName>\(value)</TeacherName><StLoginName>\(value)</StLoginName><Email>\(value)</Email><Mobil>\(value)</Mobil><OtherPhone>\(value)</OtherPhone><Phone>\(value)</Phone><MajorWorkPlace>\(value)</MajorWorkPlace></Or></Condition></Request>", &err)
@@ -355,6 +361,17 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         }
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath){
+        
+        let data = _DisplayTeachers[indexPath.row]
+        
+        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("TeacherDetailViewCtrl") as! TeacherDetailViewCtrl
+        
+        nextView.TeacherData = data
+        
+        self.navigationController?.pushViewController(nextView, animated: true)
     }
     
     //Mark : SearchBar

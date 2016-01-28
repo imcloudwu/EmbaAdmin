@@ -94,7 +94,7 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         
         var mergeData = [String:EmbaStudent]()
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
         let body = ClassData == nil ? "<Request><Condition><Or><StudentName>\(value)</StudentName><Company>\(value)</Company><EduSchoolName>\(value)</EduSchoolName><ClassName>\(value)</ClassName></Or></Condition></Request>" : "<Request><Condition><Or><ClassName>\(ClassData.ClassName)</ClassName></Or></Condition></Request>"

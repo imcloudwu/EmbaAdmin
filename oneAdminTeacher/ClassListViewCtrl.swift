@@ -79,7 +79,7 @@ class ClassListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDeleg
         
         var retVal = [EmbaClass]()
         
-        let con = GetCommonConnect("test.emba.ntu.edu.tw")
+        let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
         
         let rsp = con.SendRequest("main.GetAllClass", bodyContent: "", &err)

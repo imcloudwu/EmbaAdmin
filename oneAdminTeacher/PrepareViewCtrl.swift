@@ -57,14 +57,14 @@ class PrepareViewCtrl: UIViewController {
                         if self.Success{
                             self.statusLabel.text = "註冊裝置..."
                             
-                            NotificationService.Register(Global.MyDeviceToken, accessToken: Global.AccessToken) { () -> () in
+                            //NotificationService.Register(Global.MyDeviceToken, accessToken: Global.AccessToken) { () -> () in
                                 
                                 EnableSideMenu()
                                 
                                 let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("StudentQuery")
                                 
                                 ChangeContentView(nextView!)
-                            }
+                            //}
                         }
                         else{
                             self.statusLabel.text = "登錄過程發生失敗..."
@@ -154,6 +154,10 @@ class PrepareViewCtrl: UIViewController {
             
             Global.MyName = json["firstName"].stringValue + " " + json["lastName"].stringValue
             Global.MyEmail = json["mail"].stringValue
+            
+            if Global.MyEmail == "zoe.lu@ischool.com.tw"{
+                Global.DSAName = "test.emba.ntu.edu.tw"
+            }
         }
     }
     
