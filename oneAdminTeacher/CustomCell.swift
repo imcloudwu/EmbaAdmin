@@ -8,6 +8,16 @@
 
 import UIKit
 
+class AttendStudentCell : UITableViewCell{
+    
+    @IBOutlet weak var studentNumber: UILabel!
+    @IBOutlet weak var name: UILabel!
+    @IBOutlet weak var gender: UILabel!
+    
+    override func awakeFromNib() {
+    }
+}
+
 class EmbaTeacherInfoCell : UITableViewCell{
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -34,19 +44,6 @@ class EmbaTeacherCell : UITableViewCell{
         
         Tag2.layer.masksToBounds = true
         Tag2.layer.cornerRadius = 5
-    }
-}
-
-
-class EmbaClassCell : UITableViewCell{
-    
-    @IBOutlet weak var GradeYear: UILabel!
-    @IBOutlet weak var ClassName: UILabel!
-    @IBOutlet weak var OtherInfo: UILabel!
-    
-    override func awakeFromNib() {
-        GradeYear.layer.cornerRadius = 5
-        GradeYear.layer.masksToBounds = true
     }
 }
 

@@ -10,13 +10,18 @@ import UIKit
 
 class CourseWebViewCtrl: UIViewController,UIWebViewDelegate {
     
+    var progressTimer : ProgressTimer!
+    
     @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var tint: UILabel!
+    @IBOutlet weak var progressBar: UIProgressView!
     
     var Url : String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        progressTimer = ProgressTimer(progressBar: progressBar)
         
         tint.text = "查無資料"
         
@@ -39,6 +44,14 @@ class CourseWebViewCtrl: UIViewController,UIWebViewDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func webViewDidStartLoad(webView: UIWebView){
+        progressTimer.StartProgress()
+    }
+    
+    func webViewDidFinishLoad(webView: UIWebView){
+        progressTimer.StopProgress()
     }
     
     

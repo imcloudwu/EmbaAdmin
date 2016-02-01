@@ -10,6 +10,8 @@ import UIKit
 
 class SideMenuViewCtrl: UIViewController{
     
+    weak var searchBarOfCenter : UISearchBar?
+    
     @IBOutlet weak var MyPhoto: UIImageView!
     @IBOutlet weak var MyName: UILabel!
     @IBOutlet weak var MyEmail: UILabel!
@@ -41,6 +43,8 @@ class SideMenuViewCtrl: UIViewController{
         MyEmail.text = Global.MyEmail
         
         MyPhoto.image = Global.MyPhoto
+        
+        searchBarOfCenter?.resignFirstResponder()
     }
     
     @IBAction func Btn1(sender: AnyObject) {
@@ -53,13 +57,6 @@ class SideMenuViewCtrl: UIViewController{
     @IBAction func Btn2(sender: AnyObject) {
         
         let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("CourseQuery")
-        
-        ChangeContentView(nextView!)
-    }
-    
-    @IBAction func ClassBtnClick(sender: AnyObject) {
-        
-        let nextView = self.storyboard?.instantiateViewControllerWithIdentifier("ClassQuery")
         
         ChangeContentView(nextView!)
     }

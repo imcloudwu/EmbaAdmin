@@ -121,12 +121,6 @@ class ClassViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSource,
         self.presentViewController(switcher, animated: true, completion: nil)
     }
     
-    func ToggleSideMenu(){
-        let app = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        app.centerContainer?.toggleDrawerSide(MMDrawerSide.Left, animated: true, completion: nil)
-    }
-    
     func ReloadData(){
         GetMyClassList()
         self.refreshControl.endRefreshing()

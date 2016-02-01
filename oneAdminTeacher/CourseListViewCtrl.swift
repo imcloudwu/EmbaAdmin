@@ -10,6 +10,8 @@ import UIKit
 
 class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate {
     
+    var toggleViewDelegate : ToggleViewDelegate!
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -49,11 +51,13 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
                 
                 for sm in 0...2{
                     
-                    sm_menu.addAction(UIAlertAction(title: CovertSemesterText("\(sm)"), style: UIAlertActionStyle.Default, handler: { (act1) -> Void in
+                    let smTitle = sm == 0 ? CovertSemesterText("\(sm)") : "\(sm)"
+                    
+                    sm_menu.addAction(UIAlertAction(title: smTitle, style: UIAlertActionStyle.Default, handler: { (act1) -> Void in
                         
                         self._SelectedSemester = SemesterItem(SchoolYear:"\(sy)",Semester:"\(sm)")
                         
-                        self.schoolYearBtn.setTitle(self._SelectedSemester.Description, forState: UIControlState.Normal)
+                        self.SetSelectBtnTitle()
                         
                         self.StartToGetCourseData()
                     }))
@@ -70,11 +74,13 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Menu-24.png"), style: UIBarButtonItemStyle.Plain, target: self, action: "ToggleSideMenu")
+        toggleViewDelegate = ToggleViewDelegate(searchBar: searchBar)
+        
+        self.navigationItem.leftBarButtonItem = toggleViewDelegate.ToggleBtn
         
         progressTimer = ProgressTimer(progressBar: progressBar)
         
-        self.navigationItem.title = "課程查詢"
+        self.navigationItem.title = "課程資料"
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -101,7 +107,7 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
                 self._CurrentSemester = sysm
                 self._SelectedSemester = sysm
                 
-                self.schoolYearBtn.setTitle(self._SelectedSemester.Description, forState: UIControlState.Normal)
+                self.SetSelectBtnTitle()
                 
                 self.progressTimer.StopProgress()
                 
@@ -113,6 +119,10 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func SetSelectBtnTitle(){
+        self.schoolYearBtn.setTitle("  " + self._SelectedSemester.Description, forState: UIControlState.Normal)
     }
     
     func StartToGetCourseData(){
@@ -242,12 +252,6 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         retVal += mergeData.values
         
         return retVal.sort({$0.Semester > $1.Semester})
-    }
-    
-    func ToggleSideMenu(){
-        let app = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        app.centerContainer?.toggleDrawerSide(MMDrawerSide.Left, animated: true, completion: nil)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{

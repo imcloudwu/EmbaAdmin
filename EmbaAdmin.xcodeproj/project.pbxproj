@@ -59,6 +59,7 @@
 		615C18071C4E0D200010AA61 /* 老師.png in Resources */ = {isa = PBXBuildFile; fileRef = 615C18011C4E0D200010AA61 /* 老師.png */; };
 		615C18081C4E0D200010AA61 /* 背景圖片.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 615C18021C4E0D200010AA61 /* 背景圖片.jpg */; };
 		615C18091C4E0D200010AA61 /* 課程.png in Resources */ = {isa = PBXBuildFile; fileRef = 615C18031C4E0D200010AA61 /* 課程.png */; };
+		6162C91C1C5C4E4A004B5769 /* ToggleViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6162C91B1C5C4E4A004B5769 /* ToggleViewDelegate.swift */; };
 		61644F2F1C55C29800839F18 /* TeacherDetailViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61644F2E1C55C29800839F18 /* TeacherDetailViewCtrl.swift */; };
 		61644F311C55C9E300839F18 /* TeacherInfoViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61644F301C55C9E300839F18 /* TeacherInfoViewCtrl.swift */; };
 		6173AACF1B5791190049EB63 /* Find User Filled-32.png in Resources */ = {isa = PBXBuildFile; fileRef = 6173AACC1B5791190049EB63 /* Find User Filled-32.png */; };
@@ -108,6 +109,7 @@
 		61CA693F1B5E5D27002D2842 /* ParseFacebookUtilsV4.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CA69391B5E5D27002D2842 /* ParseFacebookUtilsV4.framework */; };
 		61CA69401B5E5D27002D2842 /* ParseUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61CA693A1B5E5D27002D2842 /* ParseUI.framework */; };
 		61CFA3B01BAAD02400B304CE /* EmbaCourseViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61CFA3AF1BAAD02400B304CE /* EmbaCourseViewCtrl.swift */; };
+		61D066411C5B4F6F00A5018A /* Filter-24.png in Resources */ = {isa = PBXBuildFile; fileRef = 61D066401C5B4F6F00A5018A /* Filter-24.png */; };
 		61DACF6F1B6225FF001D5633 /* MessageCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DACF6E1B6225FF001D5633 /* MessageCoreData.swift */; };
 		61DC99371B7351B800C6BA66 /* WatchReaderListViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DC99361B7351B800C6BA66 /* WatchReaderListViewCtrl.swift */; };
 		61E264BA1B9850BF002B1437 /* StudentSearchViewCtrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E264B91B9850BF002B1437 /* StudentSearchViewCtrl.swift */; };
@@ -197,6 +199,7 @@
 		615C18011C4E0D200010AA61 /* 老師.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "老師.png"; sourceTree = "<group>"; };
 		615C18021C4E0D200010AA61 /* 背景圖片.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "背景圖片.jpg"; sourceTree = "<group>"; };
 		615C18031C4E0D200010AA61 /* 課程.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "課程.png"; sourceTree = "<group>"; };
+		6162C91B1C5C4E4A004B5769 /* ToggleViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToggleViewDelegate.swift; sourceTree = "<group>"; };
 		61644F2E1C55C29800839F18 /* TeacherDetailViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeacherDetailViewCtrl.swift; sourceTree = "<group>"; };
 		61644F301C55C9E300839F18 /* TeacherInfoViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeacherInfoViewCtrl.swift; sourceTree = "<group>"; };
 		6173AACC1B5791190049EB63 /* Find User Filled-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Find User Filled-32.png"; path = "icon/Find User Filled-32.png"; sourceTree = SOURCE_ROOT; };
@@ -252,6 +255,7 @@
 		61CA69391B5E5D27002D2842 /* ParseFacebookUtilsV4.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseFacebookUtilsV4.framework; sourceTree = "<group>"; };
 		61CA693A1B5E5D27002D2842 /* ParseUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ParseUI.framework; sourceTree = "<group>"; };
 		61CFA3AF1BAAD02400B304CE /* EmbaCourseViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmbaCourseViewCtrl.swift; sourceTree = "<group>"; };
+		61D066401C5B4F6F00A5018A /* Filter-24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Filter-24.png"; sourceTree = "<group>"; };
 		61DACF6E1B6225FF001D5633 /* MessageCoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCoreData.swift; sourceTree = "<group>"; };
 		61DC99361B7351B800C6BA66 /* WatchReaderListViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchReaderListViewCtrl.swift; sourceTree = "<group>"; };
 		61E264B91B9850BF002B1437 /* StudentSearchViewCtrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StudentSearchViewCtrl.swift; sourceTree = "<group>"; };
@@ -330,6 +334,7 @@
 		61E308D21B2A893400BE36D0 /* icon */ = {
 			isa = PBXGroup;
 			children = (
+				61D066401C5B4F6F00A5018A /* Filter-24.png */,
 				61959DBD1C562226006D9008 /* emba_icons-58.png */,
 				61959DBE1C562226006D9008 /* emba_icons-80.png */,
 				61959DBF1C562226006D9008 /* emba_icons-87.png */,
@@ -512,6 +517,7 @@
 				617CBD1A1C520AC200398620 /* TeacherSearchViewCtrl.swift */,
 				61644F2E1C55C29800839F18 /* TeacherDetailViewCtrl.swift */,
 				61644F301C55C9E300839F18 /* TeacherInfoViewCtrl.swift */,
+				6162C91B1C5C4E4A004B5769 /* ToggleViewDelegate.swift */,
 			);
 			path = oneAdminTeacher;
 			sourceTree = "<group>";
@@ -682,6 +688,7 @@
 				61F550901B2A768900E26A5D /* Main.storyboard in Resources */,
 				610B1A751B4CCCA400E3724D /* Paper Filled-50.png in Resources */,
 				61E9D70D1B56513B00D36552 /* Add User-25.png in Resources */,
+				61D066411C5B4F6F00A5018A /* Filter-24.png in Resources */,
 				612123ED1B411525000AA07D /* User-100.png in Resources */,
 				61FB5BAA1B7074F80006C962 /* Menu 2-26.png in Resources */,
 				61553A171B7C6EA900929EBB /* Starred Ticket Filled-32.png in Resources */,
@@ -738,6 +745,7 @@
 				61ABA7F31B4FB88B0071F9D4 /* UIViewController+MMDrawerController.m in Sources */,
 				61CFA3B01BAAD02400B304CE /* EmbaCourseViewCtrl.swift in Sources */,
 				61ABA7F01B4FB88B0071F9D4 /* MMDrawerBarButtonItem.m in Sources */,
+				6162C91C1C5C4E4A004B5769 /* ToggleViewDelegate.swift in Sources */,
 				615BB2581B3BD47F00864052 /* DSUtil.swift in Sources */,
 				61C5E58E1B4BE15A008F1DEF /* StudentCoreData.swift in Sources */,
 				619C5EDA1B43C5500019C284 /* AttendanceViewCtrl.swift in Sources */,

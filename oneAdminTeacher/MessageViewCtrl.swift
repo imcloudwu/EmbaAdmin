@@ -213,12 +213,6 @@ class MessageViewCtrl: UIViewController,UITableViewDataSource,UITableViewDelegat
         return retVal
     }
     
-    func ToggleSideMenu(){
-        let app = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        app.centerContainer?.toggleDrawerSide(MMDrawerSide.Left, animated: true, completion: nil)
-    }
-    
     func MessageMenu(){
         let menu = UIAlertController(title: "你想要？", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
         

@@ -10,6 +10,8 @@ import UIKit
 
 class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate {
     
+    var toggleViewDelegate : ToggleViewDelegate!
+    
     var _TeacherDatas = [EmbaTeacher]()
     var _DisplayTeachers = [EmbaTeacher]()
     
@@ -49,7 +51,7 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
                             
                             self._CurrentTag = tag
                             
-                            self.TagBtn.setTitle(tag.Prefix + "-" + tag.Name, forState: UIControlState.Normal)
+                            self.TagBtn.setTitle("  " + tag.Prefix + "-" + tag.Name, forState: UIControlState.Normal)
                             
                             self.GetDataByTag()
                         }))
@@ -68,7 +70,9 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Menu-24.png"), style: UIBarButtonItemStyle.Plain, target: self, action: "ToggleSideMenu")
+        toggleViewDelegate = ToggleViewDelegate(searchBar: searchBar)
+        
+        self.navigationItem.leftBarButtonItem = toggleViewDelegate.ToggleBtn
         
         searchBar.delegate = self
         
@@ -134,7 +138,7 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
     
     func GetDataByValue(value:String){
         
-        self.TagBtn.setTitle("按類別查詢", forState: UIControlState.Normal)
+        self.TagBtn.setTitle("  按類別查詢", forState: UIControlState.Normal)
         
         self.tableView.contentOffset = CGPointMake(0, 0 - self.tableView.contentInset.top)
         
@@ -153,12 +157,6 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
                 self.tableView.reloadData()
             })
         })
-    }
-    
-    func ToggleSideMenu(){
-        let app = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        app.centerContainer?.toggleDrawerSide(MMDrawerSide.Left, animated: true, completion: nil)
     }
     
     func GetTags() -> [String:[Tag]]{
@@ -274,7 +272,7 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
                             let TagName = tag["TagName"].stringValue
                             let TagPerfix = tag["TagPerfix"].stringValue
                             
-                            let t = Tag(Id: "", Prefix: TagName, Name: TagPerfix)
+                            let t = Tag(Id: "", Prefix: TagPerfix, Name: TagName)
                             
                             if !Tags.contains(t){
                                 Tags.append(t)

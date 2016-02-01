@@ -41,31 +41,26 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         
         let student = Students[indexPath.row]
         
-        var cell = tableView.dequeueReusableCellWithIdentifier("AttendStudentCell")
+        let cell = tableView.dequeueReusableCellWithIdentifier("AttendStudentCell") as! AttendStudentCell
         
-        if cell == nil{
-            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "AttendStudentCell")
-        }
         
         if student.Id.isEmpty{
-            cell?.backgroundColor = _LightGrayColor
-            cell?.textLabel?.textColor = UIColor.blackColor()
-            cell?.textLabel?.font = UIFont.boldSystemFontOfSize(16.0)
-            cell?.textLabel?.text = student.ClassName
+            cell.accessoryType = UITableViewCellAccessoryType.None
+            cell.studentNumber.text = student.ClassName
+            cell.studentNumber.textColor = UIColor.blackColor()
+            cell.studentNumber.font = UIFont.boldSystemFontOfSize(17)
         }
         else{
-            
-            var text = student.StudentNumber.isEmpty ? "(查無學號)" : student.StudentNumber
-            text += student.Name.isEmpty ? "  /  (查無姓名)" : "  /  " + student.Name
-            text += student.Gender.isEmpty ? "  /  (查無姓別)" : "  /  " + student.Gender
-            
-            cell?.backgroundColor = UIColor.whiteColor()
-            cell?.textLabel?.textColor = UIColor.darkGrayColor()
-            cell?.textLabel?.font = UIFont.systemFontOfSize(16.0)
-            cell?.textLabel?.text = text
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.studentNumber.text = student.StudentNumber
+            cell.studentNumber.textColor = UIColor.darkGrayColor()
+            cell.studentNumber.font = UIFont.systemFontOfSize(16)
         }
         
-        return  cell!
+        cell.name.text = student.Name
+        cell.gender.text = student.Gender
+        
+        return  cell
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?{

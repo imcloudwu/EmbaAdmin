@@ -10,6 +10,10 @@ import UIKit
 
 class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate {
     
+    var toggleViewDelegate : ToggleViewDelegate!
+    
+    @IBOutlet weak var classBtn: UIButton!
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var progress: UIProgressView!
     @IBOutlet weak var noDataLabel: UILabel!
@@ -21,17 +25,73 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
     var _DisplayStudent = [EmbaStudent]()
     var _ClassStudent = [EmbaStudent]()
     
-    var ClassData : EmbaClass!
+    var _ClassData = [String:[EmbaClass]]()
+    var _CurrentClass : EmbaClass!
+    
+    @IBAction func classBtnClick(sender: AnyObject) {
+        
+        //Sort grade...
+        var grades = [Int]()
+        
+        for key in _ClassData.keys{
+            if let grade = Int(key){
+                grades.append(grade)
+            }
+        }
+        
+        grades = grades.sort({$0 > $1})
+        
+        //Action 1
+        let menu1 = UIAlertController(title: "請選擇年級", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        menu1.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
+        
+        for grade in grades{
+            
+            let key = "\(grade)"
+            
+            menu1.addAction(UIAlertAction(title: key, style: UIAlertActionStyle.Default, handler: { (act1) -> Void in
+                
+                //Action 2
+                
+                let menu2 = UIAlertController(title: "請選擇班級", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+                
+                menu2.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
+                
+                if let classes = self._ClassData[key]{
+                    
+                    for c in classes{
+                        
+                        menu2.addAction(UIAlertAction(title: c.ClassName, style: UIAlertActionStyle.Default, handler: { (act1) -> Void in
+                            
+                            self._CurrentClass = c
+                            
+                            self.classBtn.setTitle("  " + c.ClassName, forState: UIControlState.Normal)
+                            
+                            if let cls = self._CurrentClass{
+                                //self.ReloadStudentData(cls)
+                                self.ReloadData(cls)
+                            }
+                            
+                        }))
+                    }
+                }
+                
+                self.presentViewController(menu2, animated: true, completion: nil)
+                
+            }))
+            
+        }
+        
+        self.presentViewController(menu1, animated: true, completion: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if ClassData == nil{
-            self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Menu-24.png"), style: UIBarButtonItemStyle.Plain, target: self, action: "ToggleSideMenu")
-        }
-        else{
-            noDataLabel.text = "資料產生中,請稍候..."
-        }
+        toggleViewDelegate = ToggleViewDelegate(searchBar: searchBar)
+        
+        self.navigationItem.leftBarButtonItem = toggleViewDelegate.ToggleBtn
         
         progressTimer = ProgressTimer(progressBar: progress)
         
@@ -50,18 +110,56 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
     }
     
     override func viewWillAppear(animated: Bool) {
-        
-        self.navigationItem.title = ClassData == nil ? "學生查詢" : ClassData.ClassName
+        self.navigationItem.title = "學生查詢"
     }
     
     override func viewDidAppear(animated: Bool) {
         
-        if ClassData != nil && _ClassStudent.count == 0{
-            ReloadData("")
+        //Get Class Datas
+        if _ClassData.count == 0{
+            
+            noDataLabel.text = "資料產生中,請稍候..."
+            
+            progressTimer.StartProgress()
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
+                
+                var classData = [String:[EmbaClass]]()
+                
+                //merge class data
+                for c in self.GetClassData(){
+                    
+                    if classData[c.GradeYear] == nil{
+                        classData[c.GradeYear] = [EmbaClass]()
+                    }
+                    
+                    classData[c.GradeYear]?.append(c)
+                }
+                
+                dispatch_async(dispatch_get_main_queue(), {
+                    
+                    self.noDataLabel.text = "您可以開始進行查詢"
+                    
+                    self._ClassData = classData
+                    
+                    self.progressTimer.StopProgress()
+                })
+            })
+        }
+        
+        if _ClassStudent.count > 0{
+            return
+        }
+        else if let c = self._CurrentClass{
+            ReloadData(c)
         }
     }
     
-    func ReloadData(value:String){
+    func ReloadData(value:Any){
+        
+        //self.searchBar.userInteractionEnabled = false
+        self.noDataLabel.hidden = true
+        self.classBtn.enabled = false
         
         self.tableView.contentOffset = CGPointMake(0, 0 - self.tableView.contentInset.top)
         
@@ -69,20 +167,19 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
             
-            let tmp = self.GetEmbaData(value)
+            let tmp = self.GetStudentData(value)
             
             dispatch_async(dispatch_get_main_queue(), {
                 
-                self._DisplayStudent = tmp
+                self.classBtn.enabled = true
                 
-                if self.ClassData != nil{
-                    
-                    self._ClassStudent = tmp
-                    
-                    self.noDataLabel.text = self._ClassStudent.count == 0 ? "查無學生資料" : ""
+                if tmp.count == 0{
+                    self.noDataLabel.text = "查無資料"
+                    self.noDataLabel.hidden = false
                 }
                 
-                self.noDataLabel.hidden = self._DisplayStudent.count > 0
+                self._ClassStudent = tmp
+                self._DisplayStudent = tmp
                 
                 self.tableView.reloadData()
                 self.progressTimer.StopProgress()
@@ -90,14 +187,63 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         })
     }
     
-    func GetEmbaData(value:String) -> [EmbaStudent]{
+    func GetClassData() -> [EmbaClass]{
+        
+        var retVal = [EmbaClass]()
+        
+        let con = GetCommonConnect(Global.DSAName)
+        var err : DSFault!
+        
+        let rsp = con.SendRequest("main.GetAllClass", bodyContent: "", &err)
+        
+        if err != nil{
+            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            return retVal
+        }
+        
+        if let xml = try? AEXMLDocument(xmlData: rsp.dataValue){
+            
+            if let classes = xml.root["Response"]["Class"].all{
+                
+                for c in classes{
+                    
+                    let classId = c["ClassID"].stringValue
+                    let className = c["ClassName"].stringValue
+                    let gradeYear = c["GradeYear"].stringValue
+                    let refTeacherId = c["RefTeacherId"].stringValue
+                    let teacherName = c["TeacherName"].stringValue
+                    let teacherAccount = c["TeacherAccount"].stringValue
+                    
+                    let ec = EmbaClass(Id: classId, ClassName: className, GradeYear: gradeYear, RefTeacherId: refTeacherId, TeacherName: teacherName, TeacherAccount: teacherAccount)
+                    
+                    retVal.append(ec)
+                }
+            }
+        }
+        
+        return retVal.sort({ $0.GradeYear.intValue > $1.GradeYear.intValue})
+    }
+    
+    func GetStudentData(value:Any) -> [EmbaStudent]{
+        
+        var body = ""
+        
+        if let c = value as? EmbaClass{
+            body = "<Request><Condition><Or><ClassName>\(c.ClassName)</ClassName></Or></Condition></Request>"
+        }
+        else if let v = value as? String{
+            body = "<Request><Condition><Or><StudentName>\(v)</StudentName><Company>\(v)</Company><EduSchoolName>\(v)</EduSchoolName><ClassName>\(v)</ClassName></Or></Condition></Request>"
+        }
+        
+        return GetStudentDataWithBody(body)
+    }
+    
+    func GetStudentDataWithBody(body:String) -> [EmbaStudent]{
         
         var mergeData = [String:EmbaStudent]()
         
         let con = GetCommonConnect(Global.DSAName)
         var err : DSFault!
-        
-        let body = ClassData == nil ? "<Request><Condition><Or><StudentName>\(value)</StudentName><Company>\(value)</Company><EduSchoolName>\(value)</EduSchoolName><ClassName>\(value)</ClassName></Or></Condition></Request>" : "<Request><Condition><Or><ClassName>\(ClassData.ClassName)</ClassName></Or></Condition></Request>"
         
         let rsp = con.SendRequest("main.QueryStudent", bodyContent: body, &err)
         
@@ -162,12 +308,6 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         return Array(mergeData.values)
     }
     
-    func ToggleSideMenu(){
-        let app = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        app.centerContainer?.toggleDrawerSide(MMDrawerSide.Left, animated: true, completion: nil)
-    }
-    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
         return _DisplayStudent.count
     }
@@ -203,22 +343,41 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
     //Mark : SearchBar
     func searchBarSearchButtonClicked(searchBar: UISearchBar){
         
+        let closure = { (value:String) -> Void in
+        
+            self._CurrentClass = nil
+            self.classBtn.setTitle("  按年級班級查詢", forState: UIControlState.Normal)
+            
+            self.ReloadData(value)
+        }
+        
         searchBar.resignFirstResponder()
         self.view.endEditing(true)
         
-        if ClassData == nil{
-            ReloadData(searchBar.text!)
-        }
-        else{
-            SearchFromLocal(searchBar.text!)
+        if let text = searchBar.text {
+            
+            if text.characters.count > 1{
+                closure(text)
+            }
+            else{
+                
+                let alert = UIAlertController(title: "條件太少可能會造成查訊資量量過大", message: "確認繼續?", preferredStyle: UIAlertControllerStyle.Alert)
+                
+                alert.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
+                
+                alert.addAction(UIAlertAction(title: "繼續", style: UIAlertActionStyle.Destructive, handler: { (act) -> Void in
+                    closure(text)
+                }))
+                
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+            
         }
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         
-        if ClassData != nil{
-            SearchFromLocal(searchText)
-        }
+        SearchFromLocal(searchText)
     }
     
     func SearchFromLocal(text:String){
@@ -231,6 +390,10 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
             let founds = self._ClassStudent.filter({ stu in
                 
                 if let _ = stu.Name.lowercaseString.rangeOfString(text.lowercaseString){
+                    return true
+                }
+                
+                if let _ = stu.ClassName.lowercaseString.rangeOfString(text.lowercaseString){
                     return true
                 }
                 
@@ -255,6 +418,15 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         self.tableView.reloadData()
     }
     
+}
+
+struct EmbaClass{
+    var Id : String
+    var ClassName : String
+    var GradeYear : String
+    var RefTeacherId : String
+    var TeacherName : String
+    var TeacherAccount : String
 }
 
 class EmbaStudent{

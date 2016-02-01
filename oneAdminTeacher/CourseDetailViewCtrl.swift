@@ -29,9 +29,13 @@ class CourseDetailViewCtrl: UIViewController {
     let upArrow = UIImage(named: "Up 4-25.png")
     let downArrow = UIImage(named: "Down 4-25.png")
     
+    var _lastSelectIndex = -1
+    
     @IBOutlet weak var Height: NSLayoutConstraint!
     
     @IBAction func SegmentSelected(sender: AnyObject) {
+        
+        _lastSelectIndex = Segment.selectedSegmentIndex
         
         if Segment.selectedSegmentIndex == 0{
             
@@ -96,7 +100,9 @@ class CourseDetailViewCtrl: UIViewController {
         
         self.navigationItem.title = ""
         
-        SegmentSelected(self)
+        if Segment.selectedSegmentIndex != _lastSelectIndex{
+            SegmentSelected(self)
+        }
     }
     
     override func didReceiveMemoryWarning() {
