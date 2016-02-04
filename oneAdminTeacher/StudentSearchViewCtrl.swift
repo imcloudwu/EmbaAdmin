@@ -28,6 +28,8 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
     var _ClassData = [String:[EmbaClass]]()
     var _CurrentClass : EmbaClass!
     
+    var canSearchLessTwoWords = false
+    
     @IBAction func classBtnClick(sender: AnyObject) {
         
         //Sort grade...
@@ -159,7 +161,7 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         
         //self.searchBar.userInteractionEnabled = false
         self.noDataLabel.hidden = true
-        self.classBtn.enabled = false
+        //self.classBtn.enabled = false
         
         self.tableView.contentOffset = CGPointMake(0, 0 - self.tableView.contentInset.top)
         
@@ -171,7 +173,7 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
             
             dispatch_async(dispatch_get_main_queue(), {
                 
-                self.classBtn.enabled = true
+                //self.classBtn.enabled = true
                 
                 if tmp.count == 0{
                     self.noDataLabel.text = "查無資料"
@@ -361,15 +363,23 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
             }
             else{
                 
-                let alert = UIAlertController(title: "條件太少可能會造成查訊資量量過大", message: "確認繼續?", preferredStyle: UIAlertControllerStyle.Alert)
-                
-                alert.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
-                
-                alert.addAction(UIAlertAction(title: "繼續", style: UIAlertActionStyle.Destructive, handler: { (act) -> Void in
+                if canSearchLessTwoWords{
                     closure(text)
-                }))
+                }
+                else{
+                    
+                    let alert = UIAlertController(title: "條件太少可能會造成查訊資量量過大", message: "確認繼續?", preferredStyle: UIAlertControllerStyle.Alert)
+                    
+                    alert.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
+                    
+                    alert.addAction(UIAlertAction(title: "繼續", style: UIAlertActionStyle.Destructive, handler: { (act) -> Void in
+                        self.canSearchLessTwoWords = true
+                        closure(text)
+                    }))
+                    
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }
                 
-                self.presentViewController(alert, animated: true, completion: nil)
             }
             
         }
@@ -414,6 +424,8 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
             
             self._DisplayStudent = founds
         }
+        
+        self.tableView.contentOffset = CGPointMake(0, 0 - self.tableView.contentInset.top)
         
         self.tableView.reloadData()
     }

@@ -434,6 +434,8 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
             self._DisplayTeachers = founds
         }
         
+        self.tableView.contentOffset = CGPointMake(0, 0 - self.tableView.contentInset.top)
+        
         self.tableView.reloadData()
     }
 }

@@ -87,7 +87,7 @@ class CourseDetailViewCtrl: UIViewController {
         
         CourseName.text = CourseInfoItemData.CourseName
         SchoolYear.text = CourseInfoItemData.Semester.SchoolYear
-        Semester.text = CovertSemesterText(CourseInfoItemData.Semester.Semester)
+        Semester.text = CourseInfoItemData.Semester.Semester == "0" ? CovertSemesterText(CourseInfoItemData.Semester.Semester) : CourseInfoItemData.Semester.Semester
         Type.text = CourseInfoItemData.CourseType
         Credit.text = "\(CourseInfoItemData.Credit)"
         Teacher.text = CourseInfoItemData.Teachers.joinWithSeparator(",")

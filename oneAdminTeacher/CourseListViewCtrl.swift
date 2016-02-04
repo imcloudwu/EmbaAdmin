@@ -127,6 +127,8 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
     
     func StartToGetCourseData(){
         
+        self.tableView.contentOffset = CGPointMake(0, 0 - self.tableView.contentInset.top)
+        
         progressTimer.StartProgress()
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
