@@ -355,7 +355,7 @@ class ClassViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSource,
         var rsp = con.sendRequest("main.GetParent", bodyContent: "<Request><ClassID>\(cell.classItem.ID)</ClassID></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self, title: "錯誤", msg: err.message)
+            ShowErrorAlert(self, title: "錯誤", err: err)
         }
         else{
             

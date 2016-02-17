@@ -199,7 +199,7 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         let rsp = con.SendRequest("main.GetAllClass", bodyContent: "", &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
             return retVal
         }
         
@@ -250,7 +250,7 @@ class StudentSearchViewCtrl: UIViewController,UITableViewDelegate,UITableViewDat
         let rsp = con.SendRequest("main.QueryStudent", bodyContent: body, &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
             return Array(mergeData.values)
         }
         

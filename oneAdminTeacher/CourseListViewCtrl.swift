@@ -157,7 +157,7 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         let rsp = con.SendRequest("main.GetSemester", bodyContent: "", &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
             return retVal
         }
         
@@ -186,7 +186,7 @@ class CourseListViewCtrl: UIViewController,UITableViewDataSource,UITableViewDele
         let rsp = con.SendRequest("main.QueryCourseInfo", bodyContent: "<Request><Condition><SchoolYear>\(self._SelectedSemester.SchoolYear)</SchoolYear><Semester>\(self._SelectedSemester.Semester)</Semester></Condition></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
             return retVal
         }
         

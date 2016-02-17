@@ -169,7 +169,7 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         let rsp = con.SendRequest("main.QueryTeacherTAG", bodyContent: "", &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
             return mergeData
         }
         
@@ -208,7 +208,7 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         let rsp = con.SendRequest("main.QueryTeacher", bodyContent: "<Request><Condition><Ref_Tag_id>\(_CurrentTag.Id)</Ref_Tag_id></Condition></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
             return [EmbaTeacher]()
         }
         
@@ -223,7 +223,7 @@ class TeacherSearchViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         let rsp = con.SendRequest("main.QueryTeacher", bodyContent: "<Request><Condition><Or><TeacherName>\(value)</TeacherName><StLoginName>\(value)</StLoginName><Email>\(value)</Email><Mobil>\(value)</Mobil><OtherPhone>\(value)</OtherPhone><Phone>\(value)</Phone><MajorWorkPlace>\(value)</MajorWorkPlace></Or></Condition></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
             return [EmbaTeacher]()
         }
         

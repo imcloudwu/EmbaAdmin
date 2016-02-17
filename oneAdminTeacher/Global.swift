@@ -236,6 +236,32 @@ func ShowErrorAlert(vc:UIViewController,title:String,msg:String){
     
 }
 
+func ShowErrorAlert(vc:UIViewController,title:String,err:DSFault){
+    
+    if Global.Alert == nil{
+        Global.Alert = UIAlertController(title: "", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+        Global.Alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+    }
+    
+    Global.Alert.title = title
+    
+    var msg : String
+    
+    switch(err.code){
+        
+        case "502":
+            msg = "此帳號權限不足,若有任何疑問請聯絡校務人員"
+        
+        default :
+            msg = err.message
+    }
+    
+    Global.Alert.message = msg
+    
+    vc.presentViewController(Global.Alert, animated: true, completion: nil)
+    
+}
+
 //整理出資料的學年度學期並回傳
 func GetSemesters<T>(datas:[T]) -> [SemesterItem]{
     

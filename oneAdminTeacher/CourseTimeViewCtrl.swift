@@ -112,7 +112,7 @@ class CourseTimeViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         //println(rsp)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
             return retVal
         }
         

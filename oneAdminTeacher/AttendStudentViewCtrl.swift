@@ -100,7 +100,7 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         let rsp = con.SendRequest("main.QueryCourseStudent", bodyContent: "<Request><Condition><RefCourseID>\(CourseInfoItemData.CourseID)</RefCourseID></Condition></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
         }
         
         var xml: AEXMLDocument?
@@ -170,7 +170,7 @@ class AttendStudentViewCtrl: UIViewController,UITableViewDataSource,UITableViewD
         let rsp = con.SendRequest("main.QueryStudent", bodyContent: "<Request><Condition><StudentID>\(value)</StudentID></Condition></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
         }
         
         //var xml = AEXMLDocument(root: rsp)

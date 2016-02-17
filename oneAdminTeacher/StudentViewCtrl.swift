@@ -120,7 +120,7 @@ class StudentViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSourc
         //println(rsp)
         
         if err != nil{
-            ShowErrorAlert(self,title: "取得資料發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "取得資料發生錯誤",err: err)
             return retVal
         }
         
@@ -223,7 +223,7 @@ class StudentViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSourc
         var rsp = con.sendRequest("main.GetParent", bodyContent: "<Request><StudentID>\(cell.student.ID)</StudentID></Request>", &err)
         
         if err != nil{
-            ShowErrorAlert(self, title: "錯誤", msg: err.message)
+            ShowErrorAlert(self, title: "錯誤", err: err)
         }
         else{
             

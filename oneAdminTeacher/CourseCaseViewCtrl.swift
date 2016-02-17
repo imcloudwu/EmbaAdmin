@@ -91,7 +91,7 @@ class CourseCaseViewCtrl: UIViewController,UITableViewDelegate,UITableViewDataSo
         let rsp = con.SendRequest("main.QueryCaseUsage", bodyContent: body, &err)
         
         if err != nil{
-            ShowErrorAlert(self,title: "查詢發生錯誤",msg: err.message)
+            ShowErrorAlert(self,title: "查詢發生錯誤",err: err)
             return retVal
         }
         
